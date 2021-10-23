@@ -32,11 +32,9 @@ DataItem *decode(uint8_t *byteArray) {
 	switch(majorType) {
 		case UNSIGNED_INT: case SPECIAL:
 		case NEGATIVE_INT: case TAG:
-			printf("INT");
 			break;
 
 		case BYTE_STRING: case UTF_8:
-			printf("STRING\n");
 			dataItem->payload = byteArray;
 			byteArray += count;
 			dataItem->byteCount += count;
@@ -44,27 +42,29 @@ DataItem *decode(uint8_t *byteArray) {
 
 		case ARRAY:
 		{
-			printf("ARRAY\n");
 			dataItem->array = (DataItem **)malloc(sizeof(DataItem *) * count);
 			int i;
 			for(i = 0; i < count; i++) {
 				dataItem->array[i] = decode(byteArray);
 				byteArray += dataItem->array[i]->byteCount;
+				dataItem->byteCount += dataItem->array[i]->byteCount;
 			}
 			break;
 		}
 		
 		case MAP:
 		{
-			printf("MAP\n");
 			dataItem->keys = (DataItem **)malloc(sizeof(DataItem *) * count);
 			dataItem->values = (DataItem **)malloc(sizeof(DataItem *) * count);
 			int i;
 			for(i = 0; i < count; i++) {
 				dataItem->keys[i] = decode(byteArray);
 				byteArray += dataItem->keys[i]->byteCount;
+				dataItem->byteCount += dataItem->keys[i]->byteCount;
+
 				dataItem->values[i] = decode(byteArray);
 				byteArray += dataItem->values[i]->byteCount;
+				dataItem->byteCount += dataItem->values[i]->byteCount;
 			}
 			break;
 		}
