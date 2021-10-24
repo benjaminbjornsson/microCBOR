@@ -1,20 +1,16 @@
 #include <stdint.h>
+#include <stdio.h>
+#include <stdbool.h>
 
 #include "decoder.h"
 #include "encoder.h"
 #include "utils.h"
 #include "dataitem.h"
 
-uint8_t integer[] = { 0x0F };
+uint8_t integer[] = { 0x01 };
 uint8_t string[] = { 0x61, 0x61 };
 uint8_t array[] = { 0x83, 0x01, 0x02, 0x03 };
 uint8_t map[] = { 0xA2, 0x01, 0x61, 0x61, 0x02, 0x61, 0x62 };
-
-/*
-void dataItemInsertKeyValue(DataItem *map, DataItem *key, DataItem *value) {
-	
-}
-*/
 
 int main() {
 	DataItem *dataItem1 = decode(integer);
@@ -29,12 +25,6 @@ int main() {
 	DataItem *dataItem4 = decode(map);
 	dbg_buff_print(encode(dataItem4), dataItem4->byteCount);
 
-	dataItemAppendElement(dataItem3, dataItem1);
-	dbg_buff_print(encode(dataItem3), dataItem3->byteCount);
-
-	dataItemAppendElement(dataItem3, dataItem2);
-	dbg_buff_print(encode(dataItem3), dataItem3->byteCount);
-
-	dataItemAppendElement(dataItem3, dataItem4);
-	dbg_buff_print(encode(dataItem3), dataItem3->byteCount);
+	dataItemInsertKeyValue(dataItem4, dataItem2, dataItem3);
+	dbg_buff_print(encode(dataItem4), dataItem4->byteCount);
 }
