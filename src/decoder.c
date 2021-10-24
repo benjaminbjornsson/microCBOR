@@ -9,9 +9,14 @@
 DataItem *decode(uint8_t *byteArray) {
 	DataItem *dataItem = (DataItem *)malloc(sizeof(DataItem));
 	dataItem->header = *byteArray++;
+	dataItem->extendedCount = 0;
+	dataItem->payload = NULL;
+	dataItem->array = NULL;
+	dataItem->keys = NULL;
+	dataItem->values = NULL;
 	dataItem->byteCount = 1;
 
-	uint8_t shortCount = dataItem->header & 0x1F;
+	uint8_t shortCount = dataItemShortCount(dataItem);
 	if(24 <= shortCount && shortCount <= 27) {
 		int i;
 		dataItem->extendedCount = 0x00;
@@ -21,13 +26,7 @@ DataItem *decode(uint8_t *byteArray) {
 		}
 	}
 
-	uint64_t count;
-	if(24 <= shortCount && shortCount <= 27) {
-		count = dataItem->extendedCount;
-	} else {
-		count = shortCount;
-	}
-
+	uint64_t count = dataItemCount(dataItem);
 	uint8_t majorType = dataItem->header >> 5;
 	switch(majorType) {
 		case UNSIGNED_INT: case SPECIAL:
