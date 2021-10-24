@@ -31,6 +31,6 @@ uint8_t dataItemShortCount(DataItem *dataItem);
 
 void dataItemUpdateCount(DataItem *dataItem, uint64_t count);
 
-void dataItemAppendElement(DataItem *array, DataItem *element);
+void dataItemInsertElementAtIndex(DataItem *array, DataItem *element, uint64_t index);
 
 #endif /* _DATA_ITEM_H_ */

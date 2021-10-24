@@ -39,15 +39,15 @@ void dataItemUpdateCount(DataItem *dataItem, uint64_t count) {
 	dataItem->header = (dataItem->header & 0xE0) | (shortCount & 0x1F);
 }
 
-void dataItemAppendElement(DataItem *array, DataItem *element) {
+void dataItemInsertElementAtIndex(DataItem *array, DataItem *element, uint64_t index) {
 	uint64_t count = dataItemCount(array);
 
 	DataItem **newArray = (DataItem **)malloc(sizeof(DataItem *) * (count + 1));
+	newArray[index] = element;
 	for(int i = 0; i < count; i++) {
-		newArray[i] = array->array[i];
+		newArray[i >= index ? i + 1 : i] = array->array[i];
 	}
 
-	newArray[count] = element;
 	free(array->array);
 	array->array = newArray;
 
