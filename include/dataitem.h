@@ -2,6 +2,7 @@
 #define _DATA_ITEM_H_
 
 #include <stdint.h>
+#include <stdlib.h>
 
 #define	UNSIGNED_INT	0x00
 #define	NEGATIVE_INT	0x01
@@ -12,7 +13,6 @@
 #define	TAG				0x06
 #define	SPECIAL			0x07
 
-
 typedef struct DataItem {
 	uint8_t header;
 	uint64_t extendedCount;
@@ -22,5 +22,15 @@ typedef struct DataItem {
 	struct DataItem **values;
 	uint64_t byteCount;
 } DataItem;
+
+uint64_t dataItemCount(DataItem *dataItem);
+
+uint8_t dataItemMajorType(DataItem *dataItem);
+
+uint8_t dataItemShortCount(DataItem *dataItem);
+
+void dataItemUpdateCount(DataItem *dataItem, uint64_t count);
+
+void dataItemAppendElement(DataItem *array, DataItem *element);
 
 #endif /* _DATA_ITEM_H_ */
