@@ -33,4 +33,6 @@ void dataItemUpdateCount(DataItem *dataItem, uint64_t count);
 
 void dataItemInsertElementAtIndex(DataItem *array, DataItem *element, uint64_t index);
 
+void dataItemAppendElement(DataItem *array, DataItem *element);
+
 #endif /* _DATA_ITEM_H_ */

@@ -54,3 +54,7 @@ void dataItemInsertElementAtIndex(DataItem *array, DataItem *element, uint64_t i
 	dataItemUpdateCount(array, count + 1);
 	array->byteCount += element->byteCount;
 }
+
+void dataItemAppendElement(DataItem *array, DataItem *element) {
+	dataItemInsertElementAtIndex(array, element, dataItemCount(array));
+}
