@@ -29,12 +29,12 @@ int main() {
 	DataItem *dataItem4 = decode(map);
 	dbg_buff_print(encode(dataItem4), dataItem4->byteCount);
 
-	dataItemInsertElementAtIndex(dataItem3, dataItem1, 1);
+	dataItemAppendElement(dataItem3, dataItem1);
 	dbg_buff_print(encode(dataItem3), dataItem3->byteCount);
 
-	dataItemInsertElementAtIndex(dataItem3, dataItem2, 2);
+	dataItemAppendElement(dataItem3, dataItem2);
 	dbg_buff_print(encode(dataItem3), dataItem3->byteCount);
 
-	dataItemInsertElementAtIndex(dataItem3, dataItem4, 3);
+	dataItemAppendElement(dataItem3, dataItem4);
 	dbg_buff_print(encode(dataItem3), dataItem3->byteCount);
 }
