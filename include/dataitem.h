@@ -35,4 +35,10 @@ void dataItemInsertElementAtIndex(DataItem *array, DataItem *element, uint64_t i
 
 void dataItemAppendElement(DataItem *array, DataItem *element);
 
+void dataItemInsertKeyAtIndex(DataItem *map, DataItem *key, uint64_t index);
+
+void dataItemInsertValueAtIndex(DataItem *map, DataItem *value, uint64_t index);
+
+void dataItemInsertKeyValue(DataItem *map, DataItem *key, DataItem *value);
+
 #endif /* _DATA_ITEM_H_ */
