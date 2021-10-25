@@ -4,7 +4,9 @@ extern "C" {
     #include "decoder.h"
 }
 
-#define	FIRST_LOWER_LIMIT	(uint64_t)0x0000000000000000
+namespace unsignedInteger {
+
+#define FIRST_LOWER_LIMIT	(uint64_t)0x0000000000000000
 #define	FIRST_MIDDLE		(uint64_t)0x000000000000000B
 #define FIRST_UPPER_LIMIT	(uint64_t)0x0000000000000017
 #define FIRST_BYTE_COUNT    (uint64_t)1
@@ -198,4 +200,6 @@ TEST(unsignedIntegerTest, fifthUpperLimit) {
     EXPECT_EQ(fifthUpperLimitItem->header, fifthUpperLimitCbor[0]);
     EXPECT_EQ(fifthUpperLimitItem->extendedCount, FIFTH_UPPER_LIMIT);
     EXPECT_EQ(fifthUpperLimitItem->byteCount, FIFTH_BYTE_COUNT);
+}
+
 }
