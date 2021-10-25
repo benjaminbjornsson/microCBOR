@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #define	UNSIGNED_INT	0x00
 #define	NEGATIVE_INT	0x01
@@ -38,6 +39,8 @@ void dataItemAppendElement(DataItem *array, DataItem *element);
 void dataItemInsertKeyAtIndex(DataItem *map, DataItem *key, uint64_t index);
 
 void dataItemInsertValueAtIndex(DataItem *map, DataItem *value, uint64_t index);
+
+bool dataItemKeyLessThanOrEqual(DataItem *key1, DataItem *key2);
 
 void dataItemInsertKeyValue(DataItem *map, DataItem *key, DataItem *value);
 

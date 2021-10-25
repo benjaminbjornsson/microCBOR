@@ -92,7 +92,7 @@ void dataItemInsertValueAtIndex(DataItem *map, DataItem *value, uint64_t index) 
 	
 }
 
-bool dataItemKeyCompare(DataItem *key1, DataItem *key2) {
+bool dataItemKeyLessThanOrEqual(DataItem *key1, DataItem *key2) {
 	uint8_t majorType1 = dataItemMajorType(key1);
 	uint8_t majorType2 = dataItemMajorType(key2);
 	
@@ -105,16 +105,15 @@ bool dataItemKeyCompare(DataItem *key1, DataItem *key2) {
 	uint64_t count1 = dataItemCount(key1);
 	uint64_t count2 = dataItemCount(key2);
 	if(count1 < count2) {
-		return true;
+		return majorType1 == NEGATIVE_INT ? false : true;
 	} else if(count1 > count2) {
-		return false;
+		return majorType1 == NEGATIVE_INT ? true : false;
 	}
 
 	switch(majorType1) {
 		case UNSIGNED_INT: case SPECIAL:
 		case NEGATIVE_INT: case TAG:
-			printf("Unexpected error in dataItemKeyCompare: Atomic key already exists\n");
-			exit(1);
+			return false;
 	}
 
 	for(int i = 0; i < count1; i++) {
@@ -125,8 +124,7 @@ bool dataItemKeyCompare(DataItem *key1, DataItem *key2) {
 		}
 	}
 
-	printf("Unexpected error in dataItemKeyCompare: Key already exists\n");
-	exit(1);
+	return false;
 }
 
 void dataItemInsertKeyValue(DataItem *map, DataItem *key, DataItem *value) {
@@ -134,7 +132,7 @@ void dataItemInsertKeyValue(DataItem *map, DataItem *key, DataItem *value) {
 
 	uint64_t count = dataItemCount(map);
 	for(int i = 0; i < count; i++) {
-		if(dataItemKeyCompare(key, map->keys[i]))
+		if(dataItemKeyLessThanOrEqual(key, map->keys[i]))
 			break;
 		index++;
 	}
