@@ -1,0 +1,73 @@
+#include <gtest/gtest.h>
+#include <stdio.h>
+
+extern "C" {
+	#include "decoder.h"
+	#include "encoder.h"
+	#include "dataitem.h"
+	#include "utils.h"
+}
+
+namespace dataItemInsertKeyValueTest {
+
+uint8_t unsignedIntegerCbor[] = { 0x14 };	// 20
+uint8_t negativeIntegerCbor[] = { 0x2B };	// -12
+uint8_t utf8String1Cbor[] = { 0x42, 0x78, 0x79 };	// h'7879'
+uint8_t utf8String2Cbor[] = { 0x43, 0x61, 0x62, 0x63 };	// h'616263'
+uint8_t byteString1Cbor[] = { 0x62, 0x78, 0x79 };	// "xy"
+uint8_t byteString2Cbor[] = { 0x63, 0x61, 0x62, 0x63 };	// "abc"
+uint8_t tagCbor[] = { 0xC0, 0x00 };	// 0(0)
+uint8_t specialCbor[] = { 0xF4 };	// false
+
+uint8_t mapCbor[] = { 0xA0 };	// {}
+uint8_t finalMapCbor[]	= { 0xA4, 0x14, 0x42, 0x78, 0x79, 0x2B, 0x43, 0x61, 0x62, 0x63, 0x62, 0x78, 0x79, 0x63, 0x61, 0x62, 0x63, 0xC0, 0x00, 0xF4 }; // { 20 : h'7879', -12 : h'616263', "xy" : "abc", 0(0) : false }
+
+TEST(dataItemInsertKeyValueTest, dataItemInsertKeyValue) {
+	DataItem *unsignedIntegerItem = decode(unsignedIntegerCbor);
+	DataItem *negativeIntegerItem = decode(negativeIntegerCbor);
+	DataItem *utf8String1Item = decode(utf8String1Cbor);
+	DataItem *utf8String2Item = decode(utf8String2Cbor);
+	DataItem *byteString1Item = decode(byteString1Cbor);
+	DataItem *byteString2Item = decode(byteString2Cbor);
+	DataItem *tagItem = decode(tagCbor);
+	DataItem *specialItem = decode(specialCbor);
+	
+	DataItem *mapItem = decode(mapCbor);
+	dataItemInsertKeyValue(mapItem, unsignedIntegerItem, utf8String1Item);
+	dataItemInsertKeyValue(mapItem, negativeIntegerItem, utf8String2Item);
+	dataItemInsertKeyValue(mapItem, byteString1Item, byteString2Item);
+	dataItemInsertKeyValue(mapItem, tagItem, specialItem);
+
+	uint8_t *finalCbor = encode(mapItem);
+
+	dbg_buff_print(finalCbor, mapItem->byteCount);
+	for(int i = 0; i < sizeof(finalMapCbor); i++) {
+		EXPECT_EQ(finalCbor[i], finalMapCbor[i]);
+	}
+}
+
+TEST(dataItemInsertKeyValueTest, dataItemInsertKeyValueReverse) {
+	DataItem *unsignedIntegerItem = decode(unsignedIntegerCbor);
+	DataItem *negativeIntegerItem = decode(negativeIntegerCbor);
+	DataItem *utf8String1Item = decode(utf8String1Cbor);
+	DataItem *utf8String2Item = decode(utf8String2Cbor);
+	DataItem *byteString1Item = decode(byteString1Cbor);
+	DataItem *byteString2Item = decode(byteString2Cbor);
+	DataItem *tagItem = decode(tagCbor);
+	DataItem *specialItem = decode(specialCbor);
+	
+	DataItem *mapItem = decode(mapCbor);
+	dataItemInsertKeyValue(mapItem, tagItem, specialItem);
+	dataItemInsertKeyValue(mapItem, byteString1Item, byteString2Item);
+	dataItemInsertKeyValue(mapItem, negativeIntegerItem, utf8String2Item);
+	dataItemInsertKeyValue(mapItem, unsignedIntegerItem, utf8String1Item);
+
+	uint8_t *finalCbor = encode(mapItem);
+
+	dbg_buff_print(finalCbor, mapItem->byteCount);
+	for(int i = 0; i < sizeof(finalMapCbor); i++) {
+		EXPECT_EQ(finalCbor[i], finalMapCbor[i]);
+	}
+}
+
+}
