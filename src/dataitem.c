@@ -234,3 +234,39 @@ bool dataItemEqual(DataItem *item1, DataItem *item2) {
 	return true;
 }
 
+void dataItemFree(DataItem *dataItem) {
+	uint64_t count = dataItemCount(dataItem);
+	uint8_t majorType = dataItemMajorType(dataItem);
+	switch (majorType) {
+		case UNSIGNED_INT: case NEGATIVE_INT:
+		case SPECIAL:
+			break;
+
+		case BYTE_STRING: case UTF_8:
+			if(count > 0)
+				free(dataItem->payload);
+			break;
+		
+		case ARRAY:
+			for(int i = 0; i < count; i++) {
+				dataItemFree(dataItem->array[i]);
+			}
+			break;
+			free(dataItem->array);
+		
+		case MAP:
+			for(int i = 0; i < count; i++) {
+				dataItemFree(dataItem->keys[i]);
+				dataItemFree(dataItem->values[i]);
+			}
+			break;
+			free(dataItem->keys);
+			free(dataItem->values);
+		
+		case TAG:
+			dataItemFree(dataItem->content);
+			break;
+	}
+
+	free(dataItem);
+}

@@ -47,4 +47,6 @@ void dataItemInsertKeyValue(DataItem *map, DataItem *key, DataItem *value);
 
 bool dataItemEqual(DataItem *item1, DataItem *item2);
 
+void dataItemFree(DataItem *dataItem);
+
 #endif /* _DATA_ITEM_H_ */

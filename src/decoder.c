@@ -36,7 +36,8 @@ DataItem *decode(uint8_t *byteArray) {
 			break;
 
 		case BYTE_STRING: case UTF_8:
-			dataItem->payload = byteArray;
+			dataItem->payload = (uint8_t *)malloc(sizeof(uint8_t) * count);
+			memcpy(dataItem->payload, byteArray, count);
 			byteArray += count;
 			dataItem->byteCount += count;
 			break;
