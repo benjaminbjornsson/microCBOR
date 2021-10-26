@@ -45,4 +45,6 @@ bool dataItemKeyLessThanOrEqual(DataItem *key1, DataItem *key2);
 
 void dataItemInsertKeyValue(DataItem *map, DataItem *key, DataItem *value);
 
+bool dataItemEqual(DataItem *item1, DataItem *item2);
+
 #endif /* _DATA_ITEM_H_ */

@@ -141,3 +141,96 @@ void dataItemInsertKeyValue(DataItem *map, DataItem *key, DataItem *value) {
 	dataItemInsertValueAtIndex(map, value, index);
 	dataItemUpdateCount(map, count + 1);
 }
+
+bool dataItemEqual(DataItem *item1, DataItem *item2) {
+	if(item1->header != item2->header)
+		return false;
+	
+	if(item1->extendedCount != item2->extendedCount)
+		return false;
+	
+	uint64_t count = dataItemCount(item1);
+	uint8_t majorType = dataItemMajorType(item1);
+	switch (majorType)
+	{
+		case BYTE_STRING: case UTF_8:
+			for(int i = 0; i < count; i++) {
+				if(item1->payload[i] != item2->payload[i])
+					return false;
+			}
+
+			if(item1->array != NULL | item2->array != NULL)
+				return false;
+			if(item1->keys != NULL | item2->keys != NULL)
+				return false;
+			if(item1->values != NULL | item2->values != NULL)
+				return false;
+			if(item1->content != NULL | item2->content != NULL)
+				return false;
+			break;
+		
+		case ARRAY:
+			for(int i = 0; i < count; i++) {
+				if(!dataItemEqual(item1->array[i], item2->array[i]))
+					return false;
+			}
+
+			if(item1->payload != NULL | item2->payload != NULL)
+				return false;
+			if(item1->keys != NULL | item2->keys != NULL)
+				return false;
+			if(item1->values != NULL | item2->values != NULL)
+				return false;
+			if(item1->content != NULL | item2->content != NULL)
+				return false;
+			break;
+		
+		case MAP:
+			for(int i = 0; i < count; i++) {
+				if(!dataItemEqual(item1->keys[i], item2->keys[i]))
+					return false;
+				if(!dataItemEqual(item1->values[i], item2->values[i]))
+					return false;
+			}
+
+			if(item1->payload != NULL | item2->payload != NULL)
+				return false;
+			if(item1->array != NULL | item2->array != NULL)
+				return false;
+			if(item1->content != NULL | item2->content != NULL)
+				return false;
+			break;
+		
+		case TAG:
+			if(!dataItemEqual(item1->content, item2->content))
+				return false;
+
+			if(item1->payload != NULL | item2->payload != NULL)
+				return false;
+			if(item1->array != NULL | item2->array != NULL)
+				return false;
+			if(item1->keys != NULL | item2->keys != NULL)
+				return false;
+			if(item1->values != NULL | item2->values != NULL)
+				return false;
+			break;
+		
+		default:
+			if(item1->payload != NULL | item2->payload != NULL)
+				return false;
+			if(item1->array != NULL | item2->array != NULL)
+				return false;
+			if(item1->keys != NULL | item2->keys != NULL)
+				return false;
+			if(item1->values != NULL | item2->values != NULL)
+				return false;
+			if(item1->content != NULL | item2->content != NULL)
+				return false;
+	}
+	
+	if(item1->byteCount != item2->byteCount)
+		return false;
+	
+	return true;
+}
+
