@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 
 #include "decoder.h"
 
@@ -14,6 +15,7 @@ DataItem *decode(uint8_t *byteArray) {
 	dataItem->array = NULL;
 	dataItem->keys = NULL;
 	dataItem->values = NULL;
+	dataItem->content = NULL;
 	dataItem->byteCount = 1;
 
 	uint8_t shortCount = dataItemShortCount(dataItem);
@@ -29,8 +31,8 @@ DataItem *decode(uint8_t *byteArray) {
 	uint64_t count = dataItemCount(dataItem);
 	uint8_t majorType = dataItem->header >> 5;
 	switch(majorType) {
-		case UNSIGNED_INT: case SPECIAL:
-		case NEGATIVE_INT: case TAG:
+		case UNSIGNED_INT: case NEGATIVE_INT:
+		case SPECIAL:
 			break;
 
 		case BYTE_STRING: case UTF_8:
@@ -65,6 +67,15 @@ DataItem *decode(uint8_t *byteArray) {
 				byteArray += dataItem->values[i]->byteCount;
 				dataItem->byteCount += dataItem->values[i]->byteCount;
 			}
+			break;
+		}
+
+		case TAG:
+		{
+			DataItem *tagContent = decode(byteArray);
+			dataItem->content = tagContent;
+			dataItem->byteCount += tagContent->byteCount;
+			byteArray += tagContent->byteCount;
 			break;
 		}
 	}

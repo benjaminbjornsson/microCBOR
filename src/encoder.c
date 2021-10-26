@@ -4,8 +4,6 @@
 #include "encoder.h"
 
 uint8_t *encode(DataItem *dataItem) {
-	uint8_t *cbor = (uint8_t *)malloc(sizeof(uint8_t) * dataItem->byteCount);
-	uint8_t *cbor_ptr = cbor;
 
 	uint8_t shortCount = dataItem->header & 0x1F;
 
@@ -15,6 +13,9 @@ uint8_t *encode(DataItem *dataItem) {
 	} else {
 		count = shortCount;
 	}
+
+	uint8_t *cbor = (uint8_t *)malloc(sizeof(uint8_t) * dataItem->byteCount);
+	uint8_t *cbor_ptr = cbor;
 
 	*cbor_ptr++ = dataItem->header;
 
@@ -27,10 +28,10 @@ uint8_t *encode(DataItem *dataItem) {
 		}
 	}
 
-	uint8_t majorType = dataItem->header >> 5;
+	uint8_t majorType = dataItemMajorType(dataItem);
 	switch(majorType) {
 		case UNSIGNED_INT: case SPECIAL:
-		case NEGATIVE_INT: case TAG:
+		case NEGATIVE_INT:
 			break;
 
 		case BYTE_STRING: case UTF_8:
@@ -64,6 +65,16 @@ uint8_t *encode(DataItem *dataItem) {
 				for(int j = 0; j < dataItem->values[i]->byteCount; j++) {
 					*cbor_ptr++ = *value++;
 				}
+			}
+			break;
+		}
+
+		case TAG:
+		{
+			DataItem *content = dataItem->content;
+			uint8_t *contentCbor = encode(content);
+			for(int i = 0; i < content->byteCount; i++) {
+				*cbor_ptr++ = *contentCbor++;
 			}
 			break;
 		}

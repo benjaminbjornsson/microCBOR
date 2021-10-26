@@ -21,6 +21,7 @@ typedef struct DataItem {
 	struct DataItem **array;
 	struct DataItem **keys;
 	struct DataItem **values;
+	struct DataItem *content;
 	uint64_t byteCount;
 } DataItem;
 
