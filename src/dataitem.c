@@ -43,8 +43,8 @@ void dataItemUpdateCount(DataItem *dataItem, uint64_t count) {
 
 void dataItemInsertElementAtIndex(DataItem *array, DataItem *element, uint64_t index) {
 	uint64_t count = dataItemCount(array);
-
 	DataItem **newArray = (DataItem **)malloc(sizeof(DataItem *) * (count + 1));
+
 	newArray[index] = element;
 	for(int i = 0; i < count; i++) {
 		newArray[i >= index ? i + 1 : i] = array->array[i];
@@ -55,6 +55,27 @@ void dataItemInsertElementAtIndex(DataItem *array, DataItem *element, uint64_t i
 
 	dataItemUpdateCount(array, count + 1);
 	array->byteCount += element->byteCount;
+}
+
+void dataItemRemoveElementAtIndex(DataItem *array, uint64_t index) {
+	uint64_t count = dataItemCount(array);
+	DataItem **newArray = (DataItem **)malloc(sizeof(DataItem *) * (count - 1));
+	
+	DataItem *element;
+	for(int i = 0; i < count; i++) {
+		if(i == index) {
+			element = array->array[i];
+		} else {
+			newArray[i > index ? i - 1 : i] = array->array[i];
+		}
+	}
+	
+	free(array->array);
+	array->array = newArray;
+
+	dataItemUpdateCount(array, count - 1);
+	array->byteCount -= element->byteCount;
+	dataItemFree(element);
 }
 
 void dataItemAppendElement(DataItem *array, DataItem *element) {
@@ -270,3 +291,4 @@ void dataItemFree(DataItem *dataItem) {
 
 	free(dataItem);
 }
+

@@ -35,6 +35,8 @@ void dataItemUpdateCount(DataItem *dataItem, uint64_t count);
 
 void dataItemInsertElementAtIndex(DataItem *array, DataItem *element, uint64_t index);
 
+void dataItemRemoveElementAtIndex(DataItem *array, uint64_t index);
+
 void dataItemAppendElement(DataItem *array, DataItem *element);
 
 void dataItemInsertKeyAtIndex(DataItem *map, DataItem *key, uint64_t index);
