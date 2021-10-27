@@ -14,7 +14,7 @@ uint8_t *encode(DataItem *dataItem) {
 		count = shortCount;
 	}
 
-	uint8_t *cbor = (uint8_t *)malloc(sizeof(uint8_t) * dataItem->byteCount);
+	uint8_t *cbor = (uint8_t *)malloc(sizeof(uint8_t) * dataItemByteCount(dataItem));
 	uint8_t *cbor_ptr = cbor;
 
 	*cbor_ptr++ = dataItem->header;
@@ -46,7 +46,7 @@ uint8_t *encode(DataItem *dataItem) {
 		{	
 			for(int i = 0; i < count; i++) {
 				uint8_t *item = encode(dataItem->array[i]);
-				for(int j = 0; j < dataItem->array[i]->byteCount; j++) {
+				for(int j = 0; j < dataItemByteCount(dataItem->array[i]); j++) {
 					*cbor_ptr++ = *item++;
 				}
 			}
@@ -57,12 +57,12 @@ uint8_t *encode(DataItem *dataItem) {
 		{
 			for(int i = 0; i < count; i++) {
 				uint8_t *key = encode(dataItem->keys[i]);
-				for(int j = 0; j < dataItem->keys[i]->byteCount; j++) {
+				for(int j = 0; j < dataItemByteCount(dataItem->keys[i]); j++) {
 					*cbor_ptr++ = *key++;
 				}
 
 				uint8_t *value = encode(dataItem->values[i]);
-				for(int j = 0; j < dataItem->values[i]->byteCount; j++) {
+				for(int j = 0; j < dataItemByteCount(dataItem->values[i]); j++) {
 					*cbor_ptr++ = *value++;
 				}
 			}
@@ -73,7 +73,7 @@ uint8_t *encode(DataItem *dataItem) {
 		{
 			DataItem *content = dataItem->content;
 			uint8_t *contentCbor = encode(content);
-			for(int i = 0; i < content->byteCount; i++) {
+			for(int i = 0; i < dataItemByteCount(content); i++) {
 				*cbor_ptr++ = *contentCbor++;
 			}
 			break;

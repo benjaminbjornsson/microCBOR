@@ -41,6 +41,52 @@ void dataItemUpdateCount(DataItem *dataItem, uint64_t count) {
 	dataItem->header = (dataItem->header & 0xE0) | (shortCount & 0x1F);
 }
 
+uint64_t dataItemByteCount(DataItem *dataItem) {
+	uint64_t byteCount = 1;
+
+	uint64_t count = dataItemCount(dataItem);
+	if (0 <= count && count <= 23) {
+	} else if (24 <= count && count <= 0xFF) {
+		byteCount += 1;
+	} else if (0x0100 <= count && count <= 0xFFFF) {
+		byteCount += 2;
+	} else if (0x10000 <= count && count <= 0xFFFFFFFF) {
+		byteCount += 4;
+	} else if (0x100000000 <= count && count <= 0xFFFFFFFFFFFFFFFF) {
+		byteCount += 8;
+	}
+	
+	uint8_t majorType = dataItemMajorType(dataItem);
+	switch(majorType) {
+		case UNSIGNED_INT: case NEGATIVE_INT:
+		case SPECIAL:
+			break;
+		
+		case BYTE_STRING: case UTF_8:
+			byteCount += count;
+			break;
+
+		case ARRAY:
+			for(uint64_t i = 0; i < count; i++) {
+				byteCount += dataItemByteCount(dataItem->array[i]);
+			}
+			break;
+
+		case MAP:
+			for(uint64_t i = 0; i < count; i++) {
+				byteCount += dataItemByteCount(dataItem->keys[i]);
+				byteCount += dataItemByteCount(dataItem->values[i]);
+			}
+			break;
+
+		case TAG:
+			byteCount += dataItemByteCount(dataItem->content);
+			break;
+	}
+
+	return byteCount;
+}
+
 void dataItemInsertElementAtIndex(DataItem *array, DataItem *element, uint64_t index) {
 	uint64_t count = dataItemCount(array);
 	DataItem **newArray = (DataItem **)malloc(sizeof(DataItem *) * (count + 1));
@@ -54,7 +100,6 @@ void dataItemInsertElementAtIndex(DataItem *array, DataItem *element, uint64_t i
 	array->array = newArray;
 
 	dataItemUpdateCount(array, count + 1);
-	array->byteCount += element->byteCount;
 }
 
 void dataItemRemoveElementAtIndex(DataItem *array, uint64_t index) {
@@ -74,7 +119,6 @@ void dataItemRemoveElementAtIndex(DataItem *array, uint64_t index) {
 	array->array = newArray;
 
 	dataItemUpdateCount(array, count - 1);
-	array->byteCount -= element->byteCount;
 	dataItemFree(element);
 }
 
@@ -94,7 +138,6 @@ void dataItemInsertKeyAtIndex(DataItem *map, DataItem *key, uint64_t index) {
 	free(map->keys);
 	map->keys = newKeys;
 
-	map->byteCount += key->byteCount;
 }
 
 void dataItemInsertValueAtIndex(DataItem *map, DataItem *value, uint64_t index) {
@@ -109,7 +152,6 @@ void dataItemInsertValueAtIndex(DataItem *map, DataItem *value, uint64_t index) 
 	free(map->values);
 	map->values = newValues;
 
-	map->byteCount += value->byteCount;
 	
 }
 
@@ -249,7 +291,7 @@ bool dataItemEqual(DataItem *item1, DataItem *item2) {
 				return false;
 	}
 	
-	if(item1->byteCount != item2->byteCount)
+	if(dataItemByteCount(item1) != dataItemByteCount(item2))
 		return false;
 	
 	return true;

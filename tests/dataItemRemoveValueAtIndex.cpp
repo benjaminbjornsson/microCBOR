@@ -44,7 +44,7 @@ TEST(dataItemRemoveItemAtIndexTest, dataItemRemoveItemAtIndexSixToZero) {
 	
 	dataItemRemoveElementAtIndex(arrayItem, 7);
 	final = encode(arrayItem);
-	dbg_buff_print(final, arrayItem->byteCount);
+	dbg_buff_print(final, dataItemByteCount(arrayItem));
 	EXPECT_TRUE(compareByteArray(final, finalSixToZero6Cbor, sizeof(finalSixToZero6Cbor)));
 
 	dataItemRemoveElementAtIndex(arrayItem, 6);

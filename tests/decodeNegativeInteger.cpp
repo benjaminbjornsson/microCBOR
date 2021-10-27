@@ -65,21 +65,21 @@ uint8_t fifthUpperLimitCbor[]	= { 0x3B, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
 TEST(negativeIntegerTest, firstLowerLimit) {
 	DataItem *firstLowerLimitItem = decode(firstLowerLimitCbor);
     EXPECT_EQ(firstLowerLimitItem->header, firstLowerLimitCbor[0]);
-    EXPECT_EQ(firstLowerLimitItem->byteCount, FIRST_BYTE_COUNT);
+    EXPECT_EQ(dataItemByteCount(firstLowerLimitItem), FIRST_BYTE_COUNT);
 }
 
 /* ########## First Lower: 0x0B ########## */
 TEST(negativeIntegerTest, firstMiddle) {
 	DataItem *firstMiddleItem = decode(firstMiddleCbor);
     EXPECT_EQ(firstMiddleItem->header, firstMiddleCbor[0]);
-    EXPECT_EQ(firstMiddleItem->byteCount, FIRST_BYTE_COUNT);
+    EXPECT_EQ(dataItemByteCount(firstMiddleItem), FIRST_BYTE_COUNT);
 }
 
 /* ########## First Lower: 0x17 ########## */
 TEST(negativeIntegerTest, firstUpperLimit) {
 	DataItem *firstUpperLimitItem = decode(firstUpperLimitCbor);
     EXPECT_EQ(firstUpperLimitItem->header, firstUpperLimitCbor[0]);
-    EXPECT_EQ(firstUpperLimitItem->byteCount, FIRST_BYTE_COUNT);
+    EXPECT_EQ(dataItemByteCount(firstUpperLimitItem), FIRST_BYTE_COUNT);
 }
 
 /*
@@ -93,7 +93,7 @@ TEST(negativeIntegerTest, secondLowerLimit) {
 	DataItem *secondLowerLimitItem = decode(secondLowerLimitCbor);
     EXPECT_EQ(secondLowerLimitItem->header, secondLowerLimitCbor[0]);
     EXPECT_EQ(secondLowerLimitItem->extendedCount, SECOND_LOWER_LIMIT);
-    EXPECT_EQ(secondLowerLimitItem->byteCount, SECOND_BYTE_COUNT);
+    EXPECT_EQ(dataItemByteCount(secondLowerLimitItem), SECOND_BYTE_COUNT);
 }
 
 /* ########## Second Middle: 0x74 ########## */
@@ -101,7 +101,7 @@ TEST(negativeIntegerTest, secondMiddle) {
 	DataItem *secondMiddleItem = decode(secondMiddleCbor);
     EXPECT_EQ(secondMiddleItem->header, secondMiddleCbor[0]);
     EXPECT_EQ(secondMiddleItem->extendedCount, SECOND_MIDDLE);
-    EXPECT_EQ(secondMiddleItem->byteCount, SECOND_BYTE_COUNT);
+    EXPECT_EQ(dataItemByteCount(secondMiddleItem), SECOND_BYTE_COUNT);
 }
 
 /* ########## Second Upper: 0xFF ########## */
@@ -109,7 +109,7 @@ TEST(negativeIntegerTest, secondUpperLimit) {
 	DataItem *secondUpperLimitItem = decode(secondUpperLimitCbor);
     EXPECT_EQ(secondUpperLimitItem->header, secondUpperLimitCbor[0]);
     EXPECT_EQ(secondUpperLimitItem->extendedCount, SECOND_UPPER_LIMIT);
-    EXPECT_EQ(secondUpperLimitItem->byteCount, SECOND_BYTE_COUNT);
+    EXPECT_EQ(dataItemByteCount(secondUpperLimitItem), SECOND_BYTE_COUNT);
 }
 
 /*
@@ -123,7 +123,7 @@ TEST(negativeIntegerTest, thirdLowerLimit) {
 	DataItem *thirdLowerLimitItem = decode(thirdLowerLimitCbor);
     EXPECT_EQ(thirdLowerLimitItem->header, thirdLowerLimitCbor[0]);
     EXPECT_EQ(thirdLowerLimitItem->extendedCount, THIRD_LOWER_LIMIT);
-    EXPECT_EQ(thirdLowerLimitItem->byteCount, THIRD_BYTE_COUNT);
+    EXPECT_EQ(dataItemByteCount(thirdLowerLimitItem), THIRD_BYTE_COUNT);
 }
 
 /* ########## Third Middle: 0x7F7F ########## */
@@ -131,7 +131,7 @@ TEST(negativeIntegerTest, thirdMiddle) {
 	DataItem *thirdMiddleItem = decode(thirdMiddleCbor);
     EXPECT_EQ(thirdMiddleItem->header, thirdMiddleCbor[0]);
     EXPECT_EQ(thirdMiddleItem->extendedCount, THIRD_MIDDLE);
-    EXPECT_EQ(thirdMiddleItem->byteCount, THIRD_BYTE_COUNT);
+    EXPECT_EQ(dataItemByteCount(thirdMiddleItem), THIRD_BYTE_COUNT);
 }
 
 /* ########## Third Upper: 0xFFFF ########## */
@@ -139,7 +139,7 @@ TEST(negativeIntegerTest, thirdUpperLimit) {
 	DataItem *thirdUpperLimitItem = decode(thirdUpperLimitCbor);
     EXPECT_EQ(thirdUpperLimitItem->header, thirdUpperLimitCbor[0]);
     EXPECT_EQ(thirdUpperLimitItem->extendedCount, THIRD_UPPER_LIMIT);
-    EXPECT_EQ(thirdUpperLimitItem->byteCount, THIRD_BYTE_COUNT);
+    EXPECT_EQ(dataItemByteCount(thirdUpperLimitItem), THIRD_BYTE_COUNT);
 }
 
 /*
@@ -153,7 +153,7 @@ TEST(negativeIntegerTest, forthLowerLimit) {
 	DataItem *forthLowerLimitItem = decode(forthLowerLimitCbor);
     EXPECT_EQ(forthLowerLimitItem->header, forthLowerLimitCbor[0]);
     EXPECT_EQ(forthLowerLimitItem->extendedCount, FORTH_LOWER_LIMIT);
-    EXPECT_EQ(forthLowerLimitItem->byteCount, FORTH_BYTE_COUNT);
+    EXPECT_EQ(dataItemByteCount(forthLowerLimitItem), FORTH_BYTE_COUNT);
 }
 
 /* ########## Forth Middle: 0x7FFF_7FFF ########## */
@@ -161,7 +161,7 @@ TEST(negativeIntegerTest, forthMiddle) {
 	DataItem *forthMiddleItem = decode(forthMiddleCbor);
     EXPECT_EQ(forthMiddleItem->header, forthMiddleCbor[0]);
     EXPECT_EQ(forthMiddleItem->extendedCount, FORTH_MIDDLE);
-    EXPECT_EQ(forthMiddleItem->byteCount, FORTH_BYTE_COUNT);
+    EXPECT_EQ(dataItemByteCount(forthMiddleItem), FORTH_BYTE_COUNT);
 }
 
 /* ########## Forth Upper: 0xFFFF_FFFF ########## */
@@ -169,7 +169,7 @@ TEST(negativeIntegerTest, forthUpperLimit) {
 	DataItem *forthUpperLimitItem = decode(forthUpperLimitCbor);
     EXPECT_EQ(forthUpperLimitItem->header, forthUpperLimitCbor[0]);
     EXPECT_EQ(forthUpperLimitItem->extendedCount, FORTH_UPPER_LIMIT);
-    EXPECT_EQ(forthUpperLimitItem->byteCount, FORTH_BYTE_COUNT);
+    EXPECT_EQ(dataItemByteCount(forthUpperLimitItem), FORTH_BYTE_COUNT);
 }
 
 /*
@@ -183,7 +183,7 @@ TEST(negativeIntegerTest, fifthLowerLimit) {
 	DataItem *fifthLowerLimitItem = decode(fifthLowerLimitCbor);
     EXPECT_EQ(fifthLowerLimitItem->header, fifthLowerLimitCbor[0]);
     EXPECT_EQ(fifthLowerLimitItem->extendedCount, FIFTH_LOWER_LIMIT);
-    EXPECT_EQ(fifthLowerLimitItem->byteCount, FIFTH_BYTE_COUNT);
+    EXPECT_EQ(dataItemByteCount(fifthLowerLimitItem), FIFTH_BYTE_COUNT);
 }
 
 /* ########## Fifth Middle: 0x7FFF_FFFF_7FFF_FFFF ########## */
@@ -191,7 +191,7 @@ TEST(negativeIntegerTest, fifthMiddle) {
 	DataItem *fifthMiddleItem = decode(fifthMiddleCbor);
     EXPECT_EQ(fifthMiddleItem->header, fifthMiddleCbor[0]);
     EXPECT_EQ(fifthMiddleItem->extendedCount, FIFTH_MIDDLE);
-    EXPECT_EQ(fifthMiddleItem->byteCount, FIFTH_BYTE_COUNT);
+    EXPECT_EQ(dataItemByteCount(fifthMiddleItem), FIFTH_BYTE_COUNT);
 }
 
 /* ########## Fifth Upper: 0xFFFF_FFFF_FFFF_FFFF ########## */
@@ -199,7 +199,7 @@ TEST(negativeIntegerTest, fifthUpperLimit) {
 	DataItem *fifthUpperLimitItem = decode(fifthUpperLimitCbor);
     EXPECT_EQ(fifthUpperLimitItem->header, fifthUpperLimitCbor[0]);
     EXPECT_EQ(fifthUpperLimitItem->extendedCount, FIFTH_UPPER_LIMIT);
-    EXPECT_EQ(fifthUpperLimitItem->byteCount, FIFTH_BYTE_COUNT);
+    EXPECT_EQ(dataItemByteCount(fifthUpperLimitItem), FIFTH_BYTE_COUNT);
 }
 
 }

@@ -22,7 +22,6 @@ typedef struct DataItem {
 	struct DataItem **keys;
 	struct DataItem **values;
 	struct DataItem *content;
-	uint64_t byteCount;
 } DataItem;
 
 uint64_t dataItemCount(DataItem *dataItem);
@@ -30,6 +29,8 @@ uint64_t dataItemCount(DataItem *dataItem);
 uint8_t dataItemMajorType(DataItem *dataItem);
 
 uint8_t dataItemShortCount(DataItem *dataItem);
+
+uint64_t dataItemByteCount(DataItem *dataItem);
 
 void dataItemUpdateCount(DataItem *dataItem, uint64_t count);
 
