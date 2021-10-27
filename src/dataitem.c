@@ -172,6 +172,16 @@ void dataItemRemoveKeyValueAtKey(DataItem *map, DataItem *key) {
 	dataItemFree(valueToRemove);
 }
 
+bool dataItemKeyExists(DataItem *map, DataItem *key) {
+	uint64_t count = dataItemCount(map);
+	for(uint64_t i = 0; i < count; i++) {
+		if(dataItemEqual(key, map->keys[i]))
+			return true;
+	}
+
+	return false;
+}
+
 bool dataItemKeyLessThanOrEqual(DataItem *key1, DataItem *key2) {
 	uint8_t majorType1 = dataItemMajorType(key1);
 	uint8_t majorType2 = dataItemMajorType(key2);
