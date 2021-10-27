@@ -144,6 +144,34 @@ void dataItemInsertKeyValueAtIndex(DataItem *map, DataItem *key, DataItem *value
 	map->values = newValues;
 }
 
+void dataItemRemoveKeyValueAtKey(DataItem *map, DataItem *key) {
+	uint64_t count = dataItemCount(map);
+	DataItem **newKeys = (DataItem **)malloc(sizeof(DataItem *) * (count - 1));
+	DataItem **newValues = (DataItem **)malloc(sizeof(DataItem *) * (count - 1));
+
+	DataItem *keyToRemove, *valueToRemove;
+	bool removed = false;
+	for(int i = 0; i < count; i++) {
+		if(dataItemEqual(key, map->keys[i])) {
+			keyToRemove = map->keys[i];
+			valueToRemove = map->values[i];
+			removed = true;
+		} else {
+			newKeys[removed ? i - 1 : i] = map->keys[i];
+			newValues[removed ? i - 1 : i] = map->values[i];
+		}
+	}
+
+	free(map->keys);
+	free(map->values);
+	map->keys = newKeys;
+	map->values = newValues;
+
+	dataItemUpdateCount(map, count - 1);
+	dataItemFree(keyToRemove);
+	dataItemFree(valueToRemove);
+}
+
 bool dataItemKeyLessThanOrEqual(DataItem *key1, DataItem *key2) {
 	uint8_t majorType1 = dataItemMajorType(key1);
 	uint8_t majorType2 = dataItemMajorType(key2);
