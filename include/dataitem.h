@@ -40,9 +40,7 @@ void dataItemRemoveElementAtIndex(DataItem *array, uint64_t index);
 
 void dataItemAppendElement(DataItem *array, DataItem *element);
 
-void dataItemInsertKeyAtIndex(DataItem *map, DataItem *key, uint64_t index);
-
-void dataItemInsertValueAtIndex(DataItem *map, DataItem *value, uint64_t index);
+void dataItemInsertKeyValueAtIndex(DataItem *map, DataItem *key, DataItem *value, uint64_t index);
 
 bool dataItemKeyLessThanOrEqual(DataItem *key1, DataItem *key2);
 

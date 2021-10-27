@@ -126,33 +126,22 @@ void dataItemAppendElement(DataItem *array, DataItem *element) {
 	dataItemInsertElementAtIndex(array, element, dataItemCount(array));
 }
 
-void dataItemInsertKeyAtIndex(DataItem *map, DataItem *key, uint64_t index) {
+void dataItemInsertKeyValueAtIndex(DataItem *map, DataItem *key, DataItem *value, uint64_t index) {
 	uint64_t count = dataItemCount(map);
 
 	DataItem **newKeys = (DataItem **)malloc(sizeof(DataItem *) * (count + 1));
-	newKeys[index] = key;
-	for(int i = 0; i < count; i++) {
-		newKeys[i >= index ? i + 1 : i] = map->keys[i];
-	}
-
-	free(map->keys);
-	map->keys = newKeys;
-
-}
-
-void dataItemInsertValueAtIndex(DataItem *map, DataItem *value, uint64_t index) {
-	uint64_t count = dataItemCount(map);
-
 	DataItem **newValues = (DataItem **)malloc(sizeof(DataItem *) * (count + 1));
+	newKeys[index] = key;
 	newValues[index] = value;
 	for(int i = 0; i < count; i++) {
+		newKeys[i >= index ? i + 1 : i] = map->keys[i];
 		newValues[i >= index ? i + 1 : i] = map->values[i];
 	}
 
+	free(map->keys);
 	free(map->values);
+	map->keys = newKeys;
 	map->values = newValues;
-
-	
 }
 
 bool dataItemKeyLessThanOrEqual(DataItem *key1, DataItem *key2) {
@@ -200,8 +189,7 @@ void dataItemInsertKeyValue(DataItem *map, DataItem *key, DataItem *value) {
 		index++;
 	}
 	
-	dataItemInsertKeyAtIndex(map, key, index);
-	dataItemInsertValueAtIndex(map, value, index);
+	dataItemInsertKeyValueAtIndex(map, key, value, index);
 	dataItemUpdateCount(map, count + 1);
 }
 
