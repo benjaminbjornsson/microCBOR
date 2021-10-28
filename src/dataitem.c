@@ -297,7 +297,7 @@ void dataItemMapInsertKeyValueAtIndex(DataItem *map, DataItem *key, DataItem *va
 	map->values = dataItemInsertAtIndex(map->values, value, index, count);
 }
 
-void dataItemMapRemoveKeyValueAtKey(DataItem *map, DataItem *key) {
+void dataItemMapRemoveKey(DataItem *map, DataItem *key) {
 	uint64_t count = dataItemCount(map);
 	uint64_t index = dataItemIndexOfItem(map->keys, key, count);
 

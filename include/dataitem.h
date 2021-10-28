@@ -72,7 +72,7 @@ bool dataItemMapKeyExists(DataItem *map, DataItem *key);
 
 void dataItemMapInsertKeyValue(DataItem *map, DataItem *key, DataItem *value);
 
-void dataItemMapRemoveKeyValueAtKey(DataItem *map, DataItem *key);
+void dataItemMapRemoveKey(DataItem *map, DataItem *key);
 
 
 #endif /* _DATA_ITEM_H_ */
