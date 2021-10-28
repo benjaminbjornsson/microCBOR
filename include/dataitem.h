@@ -42,6 +42,8 @@ void dataItemAppendElement(DataItem *array, DataItem *element);
 
 void dataItemInsertKeyValueAtIndex(DataItem *map, DataItem *key, DataItem *value, uint64_t index);
 
+void dataItemChangeValueAtKey(DataItem *map, DataItem *key, DataItem *value);
+
 bool dataItemKeyLessThanOrEqual(DataItem *key1, DataItem *key2);
 
 bool dataItemKeyExists(DataItem *map, DataItem *key);

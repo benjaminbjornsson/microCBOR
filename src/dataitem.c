@@ -231,6 +231,19 @@ void dataItemInsertKeyValue(DataItem *map, DataItem *key, DataItem *value) {
 	dataItemUpdateCount(map, count + 1);
 }
 
+void dataItemChangeValueAtKey(DataItem *map, DataItem *key, DataItem *value) {
+	uint64_t count = dataItemCount(map);
+	for(uint64_t i = 0; i < count; i++) {
+		if(dataItemEqual(key, map->keys[i])) {
+			dataItemFree(map->values[i]);
+			map->values[i] = value;
+			return;
+		}
+	}
+
+	dataItemFree(value);
+}
+
 bool dataItemEqual(DataItem *item1, DataItem *item2) {
 	if(item1->header != item2->header)
 		return false;
