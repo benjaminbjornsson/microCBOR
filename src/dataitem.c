@@ -87,39 +87,59 @@ uint64_t dataItemByteCount(DataItem *dataItem) {
 	return byteCount;
 }
 
-void dataItemInsertElementAtIndex(DataItem *array, DataItem *element, uint64_t index) {
-	uint64_t count = dataItemCount(array);
-	DataItem **newArray = (DataItem **)malloc(sizeof(DataItem *) * (count + 1));
-
-	newArray[index] = element;
-	for(int i = 0; i < count; i++) {
-		newArray[i >= index ? i + 1 : i] = array->array[i];
+uint64_t dataItemIndexOfItem(DataItem **array, DataItem *item, uint64_t count) {
+	for(uint64_t i = 0; i < count; i++)	{
+		if(dataItemEqual(item, array[i]))
+			return i;
 	}
 
-	free(array->array);
-	array->array = newArray;
+	return -1;
+}
+
+DataItem **dataItemInsertAtIndex(DataItem **dataItem, DataItem *element, uint64_t index, uint64_t length) {
+	DataItem **newArray = (DataItem **)malloc(sizeof(DataItem *) * (length + 1));
+
+	newArray[index] = element;
+	for(int i = 0; i < length; i++) {
+		newArray[i >= index ? i + 1 : i] = dataItem[i];
+	}
+
+	free(dataItem);
+
+	return newArray;
+}
+
+DataItem **dataItemRemoveAtIndex(DataItem **dataItem, uint64_t index, uint64_t length) {
+	DataItem **newArray = (DataItem **)malloc(sizeof(DataItem *) * (length - 1));
+	
+	DataItem *element;
+	for(int i = 0; i < length; i++) {
+		if(i == index) {
+			element = dataItem[i];
+		} else {
+			newArray[i > index ? i - 1 : i] = dataItem[i];
+		}
+	}
+	dataItemFree(element);
+	free(dataItem);
+
+	return newArray;
+}
+
+void dataItemInsertElementAtIndex(DataItem *array, DataItem *element, uint64_t index) {
+	uint64_t count = dataItemCount(array);
+
+	array->array = dataItemInsertAtIndex(array->array, element, index, count);
 
 	dataItemUpdateCount(array, count + 1);
 }
 
 void dataItemRemoveElementAtIndex(DataItem *array, uint64_t index) {
 	uint64_t count = dataItemCount(array);
-	DataItem **newArray = (DataItem **)malloc(sizeof(DataItem *) * (count - 1));
-	
-	DataItem *element;
-	for(int i = 0; i < count; i++) {
-		if(i == index) {
-			element = array->array[i];
-		} else {
-			newArray[i > index ? i - 1 : i] = array->array[i];
-		}
-	}
-	
-	free(array->array);
-	array->array = newArray;
+
+	array->array = dataItemRemoveAtIndex(array->array, index, count);
 
 	dataItemUpdateCount(array, count - 1);
-	dataItemFree(element);
 }
 
 void dataItemAppendElement(DataItem *array, DataItem *element) {
@@ -129,47 +149,18 @@ void dataItemAppendElement(DataItem *array, DataItem *element) {
 void dataItemInsertKeyValueAtIndex(DataItem *map, DataItem *key, DataItem *value, uint64_t index) {
 	uint64_t count = dataItemCount(map);
 
-	DataItem **newKeys = (DataItem **)malloc(sizeof(DataItem *) * (count + 1));
-	DataItem **newValues = (DataItem **)malloc(sizeof(DataItem *) * (count + 1));
-	newKeys[index] = key;
-	newValues[index] = value;
-	for(int i = 0; i < count; i++) {
-		newKeys[i >= index ? i + 1 : i] = map->keys[i];
-		newValues[i >= index ? i + 1 : i] = map->values[i];
-	}
-
-	free(map->keys);
-	free(map->values);
-	map->keys = newKeys;
-	map->values = newValues;
+	map->keys = dataItemInsertAtIndex(map->keys, key, index, count);
+	map->values = dataItemInsertAtIndex(map->values, value, index, count);
 }
 
 void dataItemRemoveKeyValueAtKey(DataItem *map, DataItem *key) {
 	uint64_t count = dataItemCount(map);
-	DataItem **newKeys = (DataItem **)malloc(sizeof(DataItem *) * (count - 1));
-	DataItem **newValues = (DataItem **)malloc(sizeof(DataItem *) * (count - 1));
+	uint64_t index = dataItemIndexOfItem(map->keys, key, count);
 
-	DataItem *keyToRemove, *valueToRemove;
-	bool removed = false;
-	for(int i = 0; i < count; i++) {
-		if(dataItemEqual(key, map->keys[i])) {
-			keyToRemove = map->keys[i];
-			valueToRemove = map->values[i];
-			removed = true;
-		} else {
-			newKeys[removed ? i - 1 : i] = map->keys[i];
-			newValues[removed ? i - 1 : i] = map->values[i];
-		}
-	}
-
-	free(map->keys);
-	free(map->values);
-	map->keys = newKeys;
-	map->values = newValues;
+	map->keys = dataItemRemoveAtIndex(map->keys, index, count);
+	map->values = dataItemRemoveAtIndex(map->values, index, count);
 
 	dataItemUpdateCount(map, count - 1);
-	dataItemFree(keyToRemove);
-	dataItemFree(valueToRemove);
 }
 
 bool dataItemKeyExists(DataItem *map, DataItem *key) {
