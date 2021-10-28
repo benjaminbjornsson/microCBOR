@@ -221,6 +221,41 @@ void dataItemFree(DataItem *dataItem) {
 	free(dataItem);
 }
 
+bool dataItemLessThanOrEqual(DataItem *key1, DataItem *key2) {
+	uint8_t majorType1 = dataItemMajorType(key1);
+	uint8_t majorType2 = dataItemMajorType(key2);
+	
+	if(majorType1 < majorType2) {
+		return true;
+	} else if(majorType1 > majorType2) {
+		return false;
+	}
+
+	uint64_t count1 = dataItemCount(key1);
+	uint64_t count2 = dataItemCount(key2);
+	if(count1 < count2) {
+		return majorType1 == NEGATIVE_INT ? false : true;
+	} else if(count1 > count2) {
+		return majorType1 == NEGATIVE_INT ? true : false;
+	}
+
+	switch(majorType1) {
+		case UNSIGNED_INT: case SPECIAL:
+		case NEGATIVE_INT: case TAG:
+			return false;
+	}
+
+	for(int i = 0; i < count1; i++) {
+		if(key1->payload[i] < key2->payload[i]) {
+			return true;
+		} else if(key1->payload[i] > key2->payload[i]) {
+			return false;
+		}
+	}
+
+	return false;
+}
+
 /*
 	#######################################
 	Array Functions
@@ -285,7 +320,7 @@ void dataItemInsertKeyValue(DataItem *map, DataItem *key, DataItem *value) {
 
 	uint64_t count = dataItemCount(map);
 	for(int i = 0; i < count; i++) {
-		if(dataItemKeyLessThanOrEqual(key, map->keys[i]))
+		if(dataItemLessThanOrEqual(key, map->keys[i]))
 			break;
 		index++;
 	}
@@ -305,39 +340,4 @@ void dataItemChangeValueAtKey(DataItem *map, DataItem *key, DataItem *value) {
 	}
 
 	dataItemFree(value);
-}
-
-bool dataItemKeyLessThanOrEqual(DataItem *key1, DataItem *key2) {
-	uint8_t majorType1 = dataItemMajorType(key1);
-	uint8_t majorType2 = dataItemMajorType(key2);
-	
-	if(majorType1 < majorType2) {
-		return true;
-	} else if(majorType1 > majorType2) {
-		return false;
-	}
-
-	uint64_t count1 = dataItemCount(key1);
-	uint64_t count2 = dataItemCount(key2);
-	if(count1 < count2) {
-		return majorType1 == NEGATIVE_INT ? false : true;
-	} else if(count1 > count2) {
-		return majorType1 == NEGATIVE_INT ? true : false;
-	}
-
-	switch(majorType1) {
-		case UNSIGNED_INT: case SPECIAL:
-		case NEGATIVE_INT: case TAG:
-			return false;
-	}
-
-	for(int i = 0; i < count1; i++) {
-		if(key1->payload[i] < key2->payload[i]) {
-			return true;
-		} else if(key1->payload[i] > key2->payload[i]) {
-			return false;
-		}
-	}
-
-	return false;
 }

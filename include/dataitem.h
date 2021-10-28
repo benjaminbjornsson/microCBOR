@@ -44,7 +44,7 @@ void dataItemInsertKeyValueAtIndex(DataItem *map, DataItem *key, DataItem *value
 
 void dataItemChangeValueAtKey(DataItem *map, DataItem *key, DataItem *value);
 
-bool dataItemKeyLessThanOrEqual(DataItem *key1, DataItem *key2);
+bool dataItemLessThanOrEqual(DataItem *key1, DataItem *key2);
 
 bool dataItemKeyExists(DataItem *map, DataItem *key);
 
