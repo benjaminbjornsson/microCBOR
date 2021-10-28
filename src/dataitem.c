@@ -2,14 +2,56 @@
 #include <stdbool.h>
 #include "dataitem.h"
 
-uint64_t dataItemCount(DataItem *dataItem) {
-    uint8_t shortCount = dataItem->header & 0x1F;
-    if(24 <= shortCount && shortCount <= 27) {
-        return dataItem->extendedCount;
-    } else {
-        return shortCount;
-    }
+/*
+	#######################################
+	Helper Functions
+	#######################################
+*/
+
+uint64_t dataItemIndexOfItem(DataItem **array, DataItem *item, uint64_t count) {
+	for(uint64_t i = 0; i < count; i++)	{
+		if(dataItemEqual(item, array[i]))
+			return i;
+	}
+
+	return -1;
 }
+
+DataItem **dataItemInsertAtIndex(DataItem **dataItem, DataItem *element, uint64_t index, uint64_t length) {
+	DataItem **newArray = (DataItem **)malloc(sizeof(DataItem *) * (length + 1));
+
+	newArray[index] = element;
+	for(int i = 0; i < length; i++) {
+		newArray[i >= index ? i + 1 : i] = dataItem[i];
+	}
+
+	free(dataItem);
+
+	return newArray;
+}
+
+DataItem **dataItemRemoveAtIndex(DataItem **dataItem, uint64_t index, uint64_t length) {
+	DataItem **newArray = (DataItem **)malloc(sizeof(DataItem *) * (length - 1));
+	
+	DataItem *element;
+	for(int i = 0; i < length; i++) {
+		if(i == index) {
+			element = dataItem[i];
+		} else {
+			newArray[i > index ? i - 1 : i] = dataItem[i];
+		}
+	}
+	dataItemFree(element);
+	free(dataItem);
+
+	return newArray;
+}
+
+/*
+	#######################################
+	Generic Functions
+	#######################################
+*/
 
 uint8_t dataItemMajorType(DataItem *dataItem) {
 	return (dataItem->header >> 5);
@@ -17,6 +59,15 @@ uint8_t dataItemMajorType(DataItem *dataItem) {
 
 uint8_t dataItemShortCount(DataItem *dataItem) {
 	return (dataItem->header & 0x1F);
+}
+
+uint64_t dataItemCount(DataItem *dataItem) {
+    uint8_t shortCount = dataItem->header & 0x1F;
+    if(24 <= shortCount && shortCount <= 27) {
+        return dataItem->extendedCount;
+    } else {
+        return shortCount;
+    }
 }
 
 void dataItemUpdateCount(DataItem *dataItem, uint64_t count) {
@@ -85,154 +136,6 @@ uint64_t dataItemByteCount(DataItem *dataItem) {
 	}
 
 	return byteCount;
-}
-
-uint64_t dataItemIndexOfItem(DataItem **array, DataItem *item, uint64_t count) {
-	for(uint64_t i = 0; i < count; i++)	{
-		if(dataItemEqual(item, array[i]))
-			return i;
-	}
-
-	return -1;
-}
-
-DataItem **dataItemInsertAtIndex(DataItem **dataItem, DataItem *element, uint64_t index, uint64_t length) {
-	DataItem **newArray = (DataItem **)malloc(sizeof(DataItem *) * (length + 1));
-
-	newArray[index] = element;
-	for(int i = 0; i < length; i++) {
-		newArray[i >= index ? i + 1 : i] = dataItem[i];
-	}
-
-	free(dataItem);
-
-	return newArray;
-}
-
-DataItem **dataItemRemoveAtIndex(DataItem **dataItem, uint64_t index, uint64_t length) {
-	DataItem **newArray = (DataItem **)malloc(sizeof(DataItem *) * (length - 1));
-	
-	DataItem *element;
-	for(int i = 0; i < length; i++) {
-		if(i == index) {
-			element = dataItem[i];
-		} else {
-			newArray[i > index ? i - 1 : i] = dataItem[i];
-		}
-	}
-	dataItemFree(element);
-	free(dataItem);
-
-	return newArray;
-}
-
-void dataItemInsertElementAtIndex(DataItem *array, DataItem *element, uint64_t index) {
-	uint64_t count = dataItemCount(array);
-
-	array->array = dataItemInsertAtIndex(array->array, element, index, count);
-
-	dataItemUpdateCount(array, count + 1);
-}
-
-void dataItemRemoveElementAtIndex(DataItem *array, uint64_t index) {
-	uint64_t count = dataItemCount(array);
-
-	array->array = dataItemRemoveAtIndex(array->array, index, count);
-
-	dataItemUpdateCount(array, count - 1);
-}
-
-void dataItemAppendElement(DataItem *array, DataItem *element) {
-	dataItemInsertElementAtIndex(array, element, dataItemCount(array));
-}
-
-void dataItemInsertKeyValueAtIndex(DataItem *map, DataItem *key, DataItem *value, uint64_t index) {
-	uint64_t count = dataItemCount(map);
-
-	map->keys = dataItemInsertAtIndex(map->keys, key, index, count);
-	map->values = dataItemInsertAtIndex(map->values, value, index, count);
-}
-
-void dataItemRemoveKeyValueAtKey(DataItem *map, DataItem *key) {
-	uint64_t count = dataItemCount(map);
-	uint64_t index = dataItemIndexOfItem(map->keys, key, count);
-
-	map->keys = dataItemRemoveAtIndex(map->keys, index, count);
-	map->values = dataItemRemoveAtIndex(map->values, index, count);
-
-	dataItemUpdateCount(map, count - 1);
-}
-
-bool dataItemKeyExists(DataItem *map, DataItem *key) {
-	uint64_t count = dataItemCount(map);
-	for(uint64_t i = 0; i < count; i++) {
-		if(dataItemEqual(key, map->keys[i]))
-			return true;
-	}
-
-	return false;
-}
-
-bool dataItemKeyLessThanOrEqual(DataItem *key1, DataItem *key2) {
-	uint8_t majorType1 = dataItemMajorType(key1);
-	uint8_t majorType2 = dataItemMajorType(key2);
-	
-	if(majorType1 < majorType2) {
-		return true;
-	} else if(majorType1 > majorType2) {
-		return false;
-	}
-
-	uint64_t count1 = dataItemCount(key1);
-	uint64_t count2 = dataItemCount(key2);
-	if(count1 < count2) {
-		return majorType1 == NEGATIVE_INT ? false : true;
-	} else if(count1 > count2) {
-		return majorType1 == NEGATIVE_INT ? true : false;
-	}
-
-	switch(majorType1) {
-		case UNSIGNED_INT: case SPECIAL:
-		case NEGATIVE_INT: case TAG:
-			return false;
-	}
-
-	for(int i = 0; i < count1; i++) {
-		if(key1->payload[i] < key2->payload[i]) {
-			return true;
-		} else if(key1->payload[i] > key2->payload[i]) {
-			return false;
-		}
-	}
-
-	return false;
-}
-
-void dataItemInsertKeyValue(DataItem *map, DataItem *key, DataItem *value) {
-	uint64_t index = 0;
-
-	uint64_t count = dataItemCount(map);
-	for(int i = 0; i < count; i++) {
-		if(dataItemKeyLessThanOrEqual(key, map->keys[i]))
-			break;
-		index++;
-	}
-	
-	dataItemInsertKeyValueAtIndex(map, key, value, index);
-	dataItemUpdateCount(map, count + 1);
-}
-
-void dataItemChangeValueAtKey(DataItem *map, DataItem *key, DataItem *value) {
-	uint64_t count = dataItemCount(map);
-	for(uint64_t i = 0; i < count; i++) {
-		if(dataItemEqual(key, map->keys[i])) {
-			dataItemFree(map->values[i]);
-			map->values[i] = value;
-			return;
-		}
-	}
-
-	dataItemFree(value);
 }
 
 bool dataItemEqual(DataItem *item1, DataItem *item2) {
@@ -318,3 +221,123 @@ void dataItemFree(DataItem *dataItem) {
 	free(dataItem);
 }
 
+/*
+	#######################################
+	Array Functions
+	#######################################
+*/
+
+void dataItemInsertElementAtIndex(DataItem *array, DataItem *element, uint64_t index) {
+	uint64_t count = dataItemCount(array);
+
+	array->array = dataItemInsertAtIndex(array->array, element, index, count);
+
+	dataItemUpdateCount(array, count + 1);
+}
+
+void dataItemRemoveElementAtIndex(DataItem *array, uint64_t index) {
+	uint64_t count = dataItemCount(array);
+
+	array->array = dataItemRemoveAtIndex(array->array, index, count);
+
+	dataItemUpdateCount(array, count - 1);
+}
+
+void dataItemAppendElement(DataItem *array, DataItem *element) {
+	dataItemInsertElementAtIndex(array, element, dataItemCount(array));
+}
+
+/*
+	#######################################
+	Map Functions
+	#######################################
+*/
+
+void dataItemInsertKeyValueAtIndex(DataItem *map, DataItem *key, DataItem *value, uint64_t index) {
+	uint64_t count = dataItemCount(map);
+
+	map->keys = dataItemInsertAtIndex(map->keys, key, index, count);
+	map->values = dataItemInsertAtIndex(map->values, value, index, count);
+}
+
+void dataItemRemoveKeyValueAtKey(DataItem *map, DataItem *key) {
+	uint64_t count = dataItemCount(map);
+	uint64_t index = dataItemIndexOfItem(map->keys, key, count);
+
+	map->keys = dataItemRemoveAtIndex(map->keys, index, count);
+	map->values = dataItemRemoveAtIndex(map->values, index, count);
+
+	dataItemUpdateCount(map, count - 1);
+}
+
+bool dataItemKeyExists(DataItem *map, DataItem *key) {
+	uint64_t count = dataItemCount(map);
+	for(uint64_t i = 0; i < count; i++) {
+		if(dataItemEqual(key, map->keys[i]))
+			return true;
+	}
+
+	return false;
+}
+
+void dataItemInsertKeyValue(DataItem *map, DataItem *key, DataItem *value) {
+	uint64_t index = 0;
+
+	uint64_t count = dataItemCount(map);
+	for(int i = 0; i < count; i++) {
+		if(dataItemKeyLessThanOrEqual(key, map->keys[i]))
+			break;
+		index++;
+	}
+	
+	dataItemInsertKeyValueAtIndex(map, key, value, index);
+	dataItemUpdateCount(map, count + 1);
+}
+
+void dataItemChangeValueAtKey(DataItem *map, DataItem *key, DataItem *value) {
+	uint64_t count = dataItemCount(map);
+	for(uint64_t i = 0; i < count; i++) {
+		if(dataItemEqual(key, map->keys[i])) {
+			dataItemFree(map->values[i]);
+			map->values[i] = value;
+			return;
+		}
+	}
+
+	dataItemFree(value);
+}
+
+bool dataItemKeyLessThanOrEqual(DataItem *key1, DataItem *key2) {
+	uint8_t majorType1 = dataItemMajorType(key1);
+	uint8_t majorType2 = dataItemMajorType(key2);
+	
+	if(majorType1 < majorType2) {
+		return true;
+	} else if(majorType1 > majorType2) {
+		return false;
+	}
+
+	uint64_t count1 = dataItemCount(key1);
+	uint64_t count2 = dataItemCount(key2);
+	if(count1 < count2) {
+		return majorType1 == NEGATIVE_INT ? false : true;
+	} else if(count1 > count2) {
+		return majorType1 == NEGATIVE_INT ? true : false;
+	}
+
+	switch(majorType1) {
+		case UNSIGNED_INT: case SPECIAL:
+		case NEGATIVE_INT: case TAG:
+			return false;
+	}
+
+	for(int i = 0; i < count1; i++) {
+		if(key1->payload[i] < key2->payload[i]) {
+			return true;
+		} else if(key1->payload[i] > key2->payload[i]) {
+			return false;
+		}
+	}
+
+	return false;
+}
