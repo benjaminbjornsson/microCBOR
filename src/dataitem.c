@@ -251,15 +251,6 @@ bool dataItemEqual(DataItem *item1, DataItem *item2) {
 				if(item1->payload[i] != item2->payload[i])
 					return false;
 			}
-
-			if(item1->array != NULL | item2->array != NULL)
-				return false;
-			if(item1->keys != NULL | item2->keys != NULL)
-				return false;
-			if(item1->values != NULL | item2->values != NULL)
-				return false;
-			if(item1->content != NULL | item2->content != NULL)
-				return false;
 			break;
 		
 		case ARRAY:
@@ -267,15 +258,6 @@ bool dataItemEqual(DataItem *item1, DataItem *item2) {
 				if(!dataItemEqual(item1->array[i], item2->array[i]))
 					return false;
 			}
-
-			if(item1->payload != NULL | item2->payload != NULL)
-				return false;
-			if(item1->keys != NULL | item2->keys != NULL)
-				return false;
-			if(item1->values != NULL | item2->values != NULL)
-				return false;
-			if(item1->content != NULL | item2->content != NULL)
-				return false;
 			break;
 		
 		case MAP:
@@ -285,40 +267,12 @@ bool dataItemEqual(DataItem *item1, DataItem *item2) {
 				if(!dataItemEqual(item1->values[i], item2->values[i]))
 					return false;
 			}
-
-			if(item1->payload != NULL | item2->payload != NULL)
-				return false;
-			if(item1->array != NULL | item2->array != NULL)
-				return false;
-			if(item1->content != NULL | item2->content != NULL)
-				return false;
 			break;
 		
 		case TAG:
 			if(!dataItemEqual(item1->content, item2->content))
 				return false;
-
-			if(item1->payload != NULL | item2->payload != NULL)
-				return false;
-			if(item1->array != NULL | item2->array != NULL)
-				return false;
-			if(item1->keys != NULL | item2->keys != NULL)
-				return false;
-			if(item1->values != NULL | item2->values != NULL)
-				return false;
 			break;
-		
-		default:
-			if(item1->payload != NULL | item2->payload != NULL)
-				return false;
-			if(item1->array != NULL | item2->array != NULL)
-				return false;
-			if(item1->keys != NULL | item2->keys != NULL)
-				return false;
-			if(item1->values != NULL | item2->values != NULL)
-				return false;
-			if(item1->content != NULL | item2->content != NULL)
-				return false;
 	}
 	
 	if(dataItemByteCount(item1) != dataItemByteCount(item2))
