@@ -204,8 +204,10 @@ bool dataItemLessThanOrEqual(DataItem *key1, DataItem *key2) {
 
 	switch(majorType1) {
 		case UNSIGNED_INT: case SPECIAL:
-		case NEGATIVE_INT: case TAG:
+		case NEGATIVE_INT:
 			return false;
+		case TAG:
+			return dataItemLessThanOrEqual(key1->content, key2->content);
 	}
 
 	for(int i = 0; i < count1; i++) {
