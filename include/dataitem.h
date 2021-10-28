@@ -36,7 +36,7 @@ uint8_t dataItemShortCount(DataItem *dataItem);
 
 uint64_t dataItemCount(DataItem *dataItem);
 
-void dataItemUpdateCount(DataItem *dataItem, uint64_t count);
+void dataItemSetCount(DataItem *dataItem, uint64_t count);
 
 uint64_t dataItemByteCount(DataItem *dataItem);
 

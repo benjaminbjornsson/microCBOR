@@ -70,7 +70,7 @@ uint64_t dataItemCount(DataItem *dataItem) {
     }
 }
 
-void dataItemUpdateCount(DataItem *dataItem, uint64_t count) {
+void dataItemSetCount(DataItem *dataItem, uint64_t count) {
 	uint8_t shortCount;
 	if (0 <= count && count <= 23) {
 		shortCount = count;
@@ -267,7 +267,7 @@ void dataItemArrayInsertElementAtIndex(DataItem *array, DataItem *element, uint6
 
 	array->array = dataItemInsertAtIndex(array->array, element, index, count);
 
-	dataItemUpdateCount(array, count + 1);
+	dataItemSetCount(array, count + 1);
 }
 
 void dataItemArrayRemoveElementAtIndex(DataItem *array, uint64_t index) {
@@ -275,7 +275,7 @@ void dataItemArrayRemoveElementAtIndex(DataItem *array, uint64_t index) {
 
 	array->array = dataItemRemoveAtIndex(array->array, index, count);
 
-	dataItemUpdateCount(array, count - 1);
+	dataItemSetCount(array, count - 1);
 }
 
 void dataItemArrayAppendElement(DataItem *array, DataItem *element) {
@@ -302,7 +302,7 @@ void dataItemMapRemoveKeyValueAtKey(DataItem *map, DataItem *key) {
 	map->keys = dataItemRemoveAtIndex(map->keys, index, count);
 	map->values = dataItemRemoveAtIndex(map->values, index, count);
 
-	dataItemUpdateCount(map, count - 1);
+	dataItemSetCount(map, count - 1);
 }
 
 bool dataItemMapKeyExists(DataItem *map, DataItem *key) {
@@ -326,7 +326,7 @@ void dataItemMapInsertKeyValue(DataItem *map, DataItem *key, DataItem *value) {
 	}
 	
 	dataItemMapInsertKeyValueAtIndex(map, key, value, index);
-	dataItemUpdateCount(map, count + 1);
+	dataItemSetCount(map, count + 1);
 }
 
 void dataItemMapChangeValueAtKey(DataItem *map, DataItem *key, DataItem *value) {
