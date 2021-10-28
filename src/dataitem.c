@@ -41,6 +41,7 @@ DataItem **dataItemRemoveAtIndex(DataItem **dataItem, uint64_t index, uint64_t l
 			newArray[i > index ? i - 1 : i] = dataItem[i];
 		}
 	}
+
 	dataItemFree(element);
 	free(dataItem);
 
@@ -290,13 +291,6 @@ void dataItemArrayAppendElement(DataItem *array, DataItem *element) {
 	#######################################
 */
 
-void dataItemMapInsertKeyValueAtIndex(DataItem *map, DataItem *key, DataItem *value, uint64_t index) {
-	uint64_t count = dataItemCount(map);
-
-	map->keys = dataItemInsertAtIndex(map->keys, key, index, count);
-	map->values = dataItemInsertAtIndex(map->values, value, index, count);
-}
-
 void dataItemMapRemoveKey(DataItem *map, DataItem *key) {
 	uint64_t count = dataItemCount(map);
 	uint64_t index = dataItemIndexOfItem(map->keys, key, count);
@@ -326,8 +320,10 @@ void dataItemMapInsertKeyValue(DataItem *map, DataItem *key, DataItem *value) {
 			break;
 		index++;
 	}
+
+	map->keys = dataItemInsertAtIndex(map->keys, key, index, count);
+	map->values = dataItemInsertAtIndex(map->values, value, index, count);
 	
-	dataItemMapInsertKeyValueAtIndex(map, key, value, index);
 	dataItemSetCount(map, count + 1);
 }
 
