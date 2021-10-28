@@ -19,7 +19,7 @@ uint8_t key2Cbor[] = { 0x42, 0x78, 0x79 };
 uint8_t key3Cbor[] = { 0x62, 0x78, 0x79 };
 uint8_t key4Cbor[] = { 0xC0, 0x00 };
 
-TEST(dataItemKeyExistsTest, dataItemExistsTest) {
+TEST(dataItemMapKeyExistsTest, dataItemExistsTest) {
 	DataItem *map1Item = decode(map1Cbor);
 	DataItem *map2Item = decode(map2Cbor);
 	DataItem *map3Item = decode(map3Cbor);
@@ -28,86 +28,86 @@ TEST(dataItemKeyExistsTest, dataItemExistsTest) {
 	DataItem *keyItem;
 	
 	keyItem = decode(key1Cbor);
-	EXPECT_TRUE(dataItemKeyExists(map1Item, keyItem));
+	EXPECT_TRUE(dataItemMapKeyExists(map1Item, keyItem));
 	free(keyItem);
 
 	keyItem = decode(key2Cbor);
-	EXPECT_TRUE(dataItemKeyExists(map1Item, keyItem));
+	EXPECT_TRUE(dataItemMapKeyExists(map1Item, keyItem));
 	free(keyItem);
 
 	keyItem = decode(key3Cbor);
-	EXPECT_TRUE(dataItemKeyExists(map1Item, keyItem));
+	EXPECT_TRUE(dataItemMapKeyExists(map1Item, keyItem));
 	free(keyItem);
 
 	keyItem = decode(key4Cbor);
-	EXPECT_TRUE(dataItemKeyExists(map1Item, keyItem));
+	EXPECT_TRUE(dataItemMapKeyExists(map1Item, keyItem));
 	free(keyItem);
 
 	
 	keyItem = decode(key1Cbor);
-	EXPECT_TRUE(dataItemKeyExists(map2Item, keyItem));
+	EXPECT_TRUE(dataItemMapKeyExists(map2Item, keyItem));
 	free(keyItem);
 
 	keyItem = decode(key2Cbor);
-	EXPECT_TRUE(dataItemKeyExists(map2Item, keyItem));
+	EXPECT_TRUE(dataItemMapKeyExists(map2Item, keyItem));
 	free(keyItem);
 
 	keyItem = decode(key3Cbor);
-	EXPECT_TRUE(dataItemKeyExists(map2Item, keyItem));
+	EXPECT_TRUE(dataItemMapKeyExists(map2Item, keyItem));
 	free(keyItem);
 
 	keyItem = decode(key4Cbor);
-	EXPECT_FALSE(dataItemKeyExists(map2Item, keyItem));
+	EXPECT_FALSE(dataItemMapKeyExists(map2Item, keyItem));
 	free(keyItem);
 
 
 	keyItem = decode(key1Cbor);
-	EXPECT_TRUE(dataItemKeyExists(map3Item, keyItem));
+	EXPECT_TRUE(dataItemMapKeyExists(map3Item, keyItem));
 	free(keyItem);
 
 	keyItem = decode(key2Cbor);
-	EXPECT_TRUE(dataItemKeyExists(map3Item, keyItem));
+	EXPECT_TRUE(dataItemMapKeyExists(map3Item, keyItem));
 	free(keyItem);
 
 	keyItem = decode(key3Cbor);
-	EXPECT_FALSE(dataItemKeyExists(map3Item, keyItem));
+	EXPECT_FALSE(dataItemMapKeyExists(map3Item, keyItem));
 	free(keyItem);
 
 	keyItem = decode(key4Cbor);
-	EXPECT_FALSE(dataItemKeyExists(map3Item, keyItem));
+	EXPECT_FALSE(dataItemMapKeyExists(map3Item, keyItem));
 	free(keyItem);
 
 	
 	keyItem = decode(key1Cbor);
-	EXPECT_TRUE(dataItemKeyExists(map4Item, keyItem));
+	EXPECT_TRUE(dataItemMapKeyExists(map4Item, keyItem));
 	free(keyItem);
 
 	keyItem = decode(key2Cbor);
-	EXPECT_FALSE(dataItemKeyExists(map4Item, keyItem));
+	EXPECT_FALSE(dataItemMapKeyExists(map4Item, keyItem));
 	free(keyItem);
 
 	keyItem = decode(key3Cbor);
-	EXPECT_FALSE(dataItemKeyExists(map4Item, keyItem));
+	EXPECT_FALSE(dataItemMapKeyExists(map4Item, keyItem));
 	free(keyItem);
 
 	keyItem = decode(key4Cbor);
-	EXPECT_FALSE(dataItemKeyExists(map4Item, keyItem));
+	EXPECT_FALSE(dataItemMapKeyExists(map4Item, keyItem));
 	free(keyItem);
 
 	
 	keyItem = decode(key1Cbor);
-	EXPECT_FALSE(dataItemKeyExists(map5Item, keyItem));
+	EXPECT_FALSE(dataItemMapKeyExists(map5Item, keyItem));
 	free(keyItem);
 
 	keyItem = decode(key2Cbor);
-	EXPECT_FALSE(dataItemKeyExists(map5Item, keyItem));
+	EXPECT_FALSE(dataItemMapKeyExists(map5Item, keyItem));
 	free(keyItem);
 
 	keyItem = decode(key3Cbor);
-	EXPECT_FALSE(dataItemKeyExists(map5Item, keyItem));
+	EXPECT_FALSE(dataItemMapKeyExists(map5Item, keyItem));
 	free(keyItem);
 
 	keyItem = decode(key4Cbor);
-	EXPECT_FALSE(dataItemKeyExists(map5Item, keyItem));
+	EXPECT_FALSE(dataItemMapKeyExists(map5Item, keyItem));
 	free(keyItem);
 }

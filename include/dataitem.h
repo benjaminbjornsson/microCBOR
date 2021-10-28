@@ -24,36 +24,55 @@ typedef struct DataItem {
 	struct DataItem *content;
 } DataItem;
 
-uint64_t dataItemCount(DataItem *dataItem);
+/*
+	#######################################
+	Generic Functions
+	#######################################
+*/
 
 uint8_t dataItemMajorType(DataItem *dataItem);
 
 uint8_t dataItemShortCount(DataItem *dataItem);
 
-uint64_t dataItemByteCount(DataItem *dataItem);
+uint64_t dataItemCount(DataItem *dataItem);
 
 void dataItemUpdateCount(DataItem *dataItem, uint64_t count);
 
-void dataItemInsertElementAtIndex(DataItem *array, DataItem *element, uint64_t index);
-
-void dataItemRemoveElementAtIndex(DataItem *array, uint64_t index);
-
-void dataItemAppendElement(DataItem *array, DataItem *element);
-
-void dataItemInsertKeyValueAtIndex(DataItem *map, DataItem *key, DataItem *value, uint64_t index);
-
-void dataItemChangeValueAtKey(DataItem *map, DataItem *key, DataItem *value);
-
-bool dataItemLessThanOrEqual(DataItem *key1, DataItem *key2);
-
-bool dataItemKeyExists(DataItem *map, DataItem *key);
-
-void dataItemInsertKeyValue(DataItem *map, DataItem *key, DataItem *value);
-
-void dataItemRemoveKeyValueAtKey(DataItem *map, DataItem *key);
+uint64_t dataItemByteCount(DataItem *dataItem);
 
 bool dataItemEqual(DataItem *item1, DataItem *item2);
 
+bool dataItemLessThanOrEqual(DataItem *key1, DataItem *key2);
+
 void dataItemFree(DataItem *dataItem);
+
+/*
+	#######################################
+	Array Functions
+	#######################################
+*/
+
+void dataItemArrayInsertElementAtIndex(DataItem *array, DataItem *element, uint64_t index);
+
+void dataItemArrayRemoveElementAtIndex(DataItem *array, uint64_t index);
+
+void dataItemArrayAppendElement(DataItem *array, DataItem *element);
+
+/*
+	#######################################
+	Map Functions
+	#######################################
+*/
+
+void dataItemMapInsertKeyValueAtIndex(DataItem *map, DataItem *key, DataItem *value, uint64_t index);
+
+void dataItemMapChangeValueAtKey(DataItem *map, DataItem *key, DataItem *value);
+
+bool dataItemMapKeyExists(DataItem *map, DataItem *key);
+
+void dataItemMapInsertKeyValue(DataItem *map, DataItem *key, DataItem *value);
+
+void dataItemMapRemoveKeyValueAtKey(DataItem *map, DataItem *key);
+
 
 #endif /* _DATA_ITEM_H_ */

@@ -32,14 +32,14 @@ TEST(dataItemInsertItemAtIndexTest, dataItemInsertItemAtIndexZeroToSeven) {
 	DataItem *specialItem = decode(specialCbor);
 
 	DataItem *arrayItem = decode(arrayCbor);
-	dataItemInsertElementAtIndex(arrayItem, unsignedIntegerItem, 0);
-	dataItemInsertElementAtIndex(arrayItem, negativeIntegerItem, 1);
-	dataItemInsertElementAtIndex(arrayItem, utf8String1Item, 2);
-	dataItemInsertElementAtIndex(arrayItem, utf8String2Item, 3);
-	dataItemInsertElementAtIndex(arrayItem, byteString1Item, 4);
-	dataItemInsertElementAtIndex(arrayItem, byteString2Item, 5);
-	dataItemInsertElementAtIndex(arrayItem, tagItem, 6);
-	dataItemInsertElementAtIndex(arrayItem, specialItem, 7);
+	dataItemArrayInsertElementAtIndex(arrayItem, unsignedIntegerItem, 0);
+	dataItemArrayInsertElementAtIndex(arrayItem, negativeIntegerItem, 1);
+	dataItemArrayInsertElementAtIndex(arrayItem, utf8String1Item, 2);
+	dataItemArrayInsertElementAtIndex(arrayItem, utf8String2Item, 3);
+	dataItemArrayInsertElementAtIndex(arrayItem, byteString1Item, 4);
+	dataItemArrayInsertElementAtIndex(arrayItem, byteString2Item, 5);
+	dataItemArrayInsertElementAtIndex(arrayItem, tagItem, 6);
+	dataItemArrayInsertElementAtIndex(arrayItem, specialItem, 7);
 
 	uint8_t *final = encode(arrayItem);
 	for(int i = 0; i < sizeof(finalZeroToSevenCbor); i++) {
@@ -58,14 +58,14 @@ TEST(dataItemInsertItemAtIndexTest, dataItemInsertItemAtIndexSevenToZero) {
 	DataItem *specialItem = decode(specialCbor);
 
 	DataItem *arrayItem = decode(arrayCbor);
-	dataItemInsertElementAtIndex(arrayItem, unsignedIntegerItem, 0);
-	dataItemInsertElementAtIndex(arrayItem, negativeIntegerItem, 0);
-	dataItemInsertElementAtIndex(arrayItem, utf8String1Item, 0);
-	dataItemInsertElementAtIndex(arrayItem, utf8String2Item, 0);
-	dataItemInsertElementAtIndex(arrayItem, byteString1Item, 0);
-	dataItemInsertElementAtIndex(arrayItem, byteString2Item, 0);
-	dataItemInsertElementAtIndex(arrayItem, tagItem, 0);
-	dataItemInsertElementAtIndex(arrayItem, specialItem, 0);
+	dataItemArrayInsertElementAtIndex(arrayItem, unsignedIntegerItem, 0);
+	dataItemArrayInsertElementAtIndex(arrayItem, negativeIntegerItem, 0);
+	dataItemArrayInsertElementAtIndex(arrayItem, utf8String1Item, 0);
+	dataItemArrayInsertElementAtIndex(arrayItem, utf8String2Item, 0);
+	dataItemArrayInsertElementAtIndex(arrayItem, byteString1Item, 0);
+	dataItemArrayInsertElementAtIndex(arrayItem, byteString2Item, 0);
+	dataItemArrayInsertElementAtIndex(arrayItem, tagItem, 0);
+	dataItemArrayInsertElementAtIndex(arrayItem, specialItem, 0);
 
 	uint8_t *final = encode(arrayItem);
 	for(int i = 0; i < sizeof(finalSevenToZeroCbor); i++) {
@@ -84,14 +84,14 @@ TEST(dataItemInsertItemAtIndexTest, dataItemInsertItemAtIndexRandom) {
 	DataItem *specialItem = decode(specialCbor);
 
 	DataItem *arrayItem = decode(arrayCbor);
-	dataItemInsertElementAtIndex(arrayItem, unsignedIntegerItem, 0);
-	dataItemInsertElementAtIndex(arrayItem, negativeIntegerItem, 1);
-	dataItemInsertElementAtIndex(arrayItem, utf8String1Item, 0);
-	dataItemInsertElementAtIndex(arrayItem, utf8String2Item, 2);
-	dataItemInsertElementAtIndex(arrayItem, byteString1Item, 4);
-	dataItemInsertElementAtIndex(arrayItem, byteString2Item, 3);
-	dataItemInsertElementAtIndex(arrayItem, tagItem, 2);
-	dataItemInsertElementAtIndex(arrayItem, specialItem, 7);
+	dataItemArrayInsertElementAtIndex(arrayItem, unsignedIntegerItem, 0);
+	dataItemArrayInsertElementAtIndex(arrayItem, negativeIntegerItem, 1);
+	dataItemArrayInsertElementAtIndex(arrayItem, utf8String1Item, 0);
+	dataItemArrayInsertElementAtIndex(arrayItem, utf8String2Item, 2);
+	dataItemArrayInsertElementAtIndex(arrayItem, byteString1Item, 4);
+	dataItemArrayInsertElementAtIndex(arrayItem, byteString2Item, 3);
+	dataItemArrayInsertElementAtIndex(arrayItem, tagItem, 2);
+	dataItemArrayInsertElementAtIndex(arrayItem, specialItem, 7);
 
 	uint8_t *final = encode(arrayItem);
 	for(int i = 0; i < sizeof(finalRandomCbor); i++) {

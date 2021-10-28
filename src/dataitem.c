@@ -184,6 +184,41 @@ bool dataItemEqual(DataItem *item1, DataItem *item2) {
 	return true;
 }
 
+bool dataItemLessThanOrEqual(DataItem *key1, DataItem *key2) {
+	uint8_t majorType1 = dataItemMajorType(key1);
+	uint8_t majorType2 = dataItemMajorType(key2);
+	
+	if(majorType1 < majorType2) {
+		return true;
+	} else if(majorType1 > majorType2) {
+		return false;
+	}
+
+	uint64_t count1 = dataItemCount(key1);
+	uint64_t count2 = dataItemCount(key2);
+	if(count1 < count2) {
+		return majorType1 == NEGATIVE_INT ? false : true;
+	} else if(count1 > count2) {
+		return majorType1 == NEGATIVE_INT ? true : false;
+	}
+
+	switch(majorType1) {
+		case UNSIGNED_INT: case SPECIAL:
+		case NEGATIVE_INT: case TAG:
+			return false;
+	}
+
+	for(int i = 0; i < count1; i++) {
+		if(key1->payload[i] < key2->payload[i]) {
+			return true;
+		} else if(key1->payload[i] > key2->payload[i]) {
+			return false;
+		}
+	}
+
+	return false;
+}
+
 void dataItemFree(DataItem *dataItem) {
 	uint64_t count = dataItemCount(dataItem);
 	uint8_t majorType = dataItemMajorType(dataItem);
@@ -221,48 +256,13 @@ void dataItemFree(DataItem *dataItem) {
 	free(dataItem);
 }
 
-bool dataItemLessThanOrEqual(DataItem *key1, DataItem *key2) {
-	uint8_t majorType1 = dataItemMajorType(key1);
-	uint8_t majorType2 = dataItemMajorType(key2);
-	
-	if(majorType1 < majorType2) {
-		return true;
-	} else if(majorType1 > majorType2) {
-		return false;
-	}
-
-	uint64_t count1 = dataItemCount(key1);
-	uint64_t count2 = dataItemCount(key2);
-	if(count1 < count2) {
-		return majorType1 == NEGATIVE_INT ? false : true;
-	} else if(count1 > count2) {
-		return majorType1 == NEGATIVE_INT ? true : false;
-	}
-
-	switch(majorType1) {
-		case UNSIGNED_INT: case SPECIAL:
-		case NEGATIVE_INT: case TAG:
-			return false;
-	}
-
-	for(int i = 0; i < count1; i++) {
-		if(key1->payload[i] < key2->payload[i]) {
-			return true;
-		} else if(key1->payload[i] > key2->payload[i]) {
-			return false;
-		}
-	}
-
-	return false;
-}
-
 /*
 	#######################################
 	Array Functions
 	#######################################
 */
 
-void dataItemInsertElementAtIndex(DataItem *array, DataItem *element, uint64_t index) {
+void dataItemArrayInsertElementAtIndex(DataItem *array, DataItem *element, uint64_t index) {
 	uint64_t count = dataItemCount(array);
 
 	array->array = dataItemInsertAtIndex(array->array, element, index, count);
@@ -270,7 +270,7 @@ void dataItemInsertElementAtIndex(DataItem *array, DataItem *element, uint64_t i
 	dataItemUpdateCount(array, count + 1);
 }
 
-void dataItemRemoveElementAtIndex(DataItem *array, uint64_t index) {
+void dataItemArrayRemoveElementAtIndex(DataItem *array, uint64_t index) {
 	uint64_t count = dataItemCount(array);
 
 	array->array = dataItemRemoveAtIndex(array->array, index, count);
@@ -278,8 +278,8 @@ void dataItemRemoveElementAtIndex(DataItem *array, uint64_t index) {
 	dataItemUpdateCount(array, count - 1);
 }
 
-void dataItemAppendElement(DataItem *array, DataItem *element) {
-	dataItemInsertElementAtIndex(array, element, dataItemCount(array));
+void dataItemArrayAppendElement(DataItem *array, DataItem *element) {
+	dataItemArrayInsertElementAtIndex(array, element, dataItemCount(array));
 }
 
 /*
@@ -288,14 +288,14 @@ void dataItemAppendElement(DataItem *array, DataItem *element) {
 	#######################################
 */
 
-void dataItemInsertKeyValueAtIndex(DataItem *map, DataItem *key, DataItem *value, uint64_t index) {
+void dataItemMapInsertKeyValueAtIndex(DataItem *map, DataItem *key, DataItem *value, uint64_t index) {
 	uint64_t count = dataItemCount(map);
 
 	map->keys = dataItemInsertAtIndex(map->keys, key, index, count);
 	map->values = dataItemInsertAtIndex(map->values, value, index, count);
 }
 
-void dataItemRemoveKeyValueAtKey(DataItem *map, DataItem *key) {
+void dataItemMapRemoveKeyValueAtKey(DataItem *map, DataItem *key) {
 	uint64_t count = dataItemCount(map);
 	uint64_t index = dataItemIndexOfItem(map->keys, key, count);
 
@@ -305,7 +305,7 @@ void dataItemRemoveKeyValueAtKey(DataItem *map, DataItem *key) {
 	dataItemUpdateCount(map, count - 1);
 }
 
-bool dataItemKeyExists(DataItem *map, DataItem *key) {
+bool dataItemMapKeyExists(DataItem *map, DataItem *key) {
 	uint64_t count = dataItemCount(map);
 	for(uint64_t i = 0; i < count; i++) {
 		if(dataItemEqual(key, map->keys[i]))
@@ -315,7 +315,7 @@ bool dataItemKeyExists(DataItem *map, DataItem *key) {
 	return false;
 }
 
-void dataItemInsertKeyValue(DataItem *map, DataItem *key, DataItem *value) {
+void dataItemMapInsertKeyValue(DataItem *map, DataItem *key, DataItem *value) {
 	uint64_t index = 0;
 
 	uint64_t count = dataItemCount(map);
@@ -325,11 +325,11 @@ void dataItemInsertKeyValue(DataItem *map, DataItem *key, DataItem *value) {
 		index++;
 	}
 	
-	dataItemInsertKeyValueAtIndex(map, key, value, index);
+	dataItemMapInsertKeyValueAtIndex(map, key, value, index);
 	dataItemUpdateCount(map, count + 1);
 }
 
-void dataItemChangeValueAtKey(DataItem *map, DataItem *key, DataItem *value) {
+void dataItemMapChangeValueAtKey(DataItem *map, DataItem *key, DataItem *value) {
 	uint64_t count = dataItemCount(map);
 	for(uint64_t i = 0; i < count; i++) {
 		if(dataItemEqual(key, map->keys[i])) {
