@@ -126,8 +126,7 @@ uint64_t dataItemByteCount(DataItem *dataItem) {
 		byteCount += 8;
 	}
 	
-	uint8_t majorType = dataItemMajorType(dataItem);
-	switch(majorType) {
+	switch(dataItemMajorType(dataItem)) {
 		case UNSIGNED_INT: case NEGATIVE_INT:
 		case SPECIAL:
 			break;
