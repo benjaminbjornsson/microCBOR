@@ -18,6 +18,8 @@
 #include <stdbool.h>
 #include "dataitem.h"
 
+#define	INVALID_INDEX	-1
+
 /*
 	#######################################
 	Helper Functions
@@ -30,7 +32,7 @@ uint64_t dataItemIndexOfItem(DataItem **array, DataItem *item, uint64_t count) {
 			return i;
 	}
 
-	return -1;
+	return INVALID_INDEX;
 }
 
 DataItem **dataItemInsertAtIndex(DataItem **dataItem, DataItem *element, uint64_t index, uint64_t length) {
