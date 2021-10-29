@@ -317,14 +317,9 @@ void dataItemMapRemoveKey(DataItem *map, DataItem *key) {
 	dataItemSetCount(map, count - 1);
 }
 
-bool dataItemMapKeyExists(DataItem *map, DataItem *key) {
+uint64_t dataItemMapIndexOfKey(DataItem *map, DataItem *key) {
 	uint64_t count = dataItemCount(map);
-	for(uint64_t i = 0; i < count; i++) {
-		if(dataItemEqual(key, map->keys[i]))
-			return true;
-	}
-
-	return false;
+	return dataItemIndexOfItem(map->keys, key, count);
 }
 
 void dataItemMapInsertKeyValue(DataItem *map, DataItem *key, DataItem *value) {

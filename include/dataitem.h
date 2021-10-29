@@ -82,7 +82,7 @@ void dataItemArrayAppendElement(DataItem *array, DataItem *element);
 
 void dataItemMapChangeValueAtKey(DataItem *map, DataItem *key, DataItem *value);
 
-bool dataItemMapKeyExists(DataItem *map, DataItem *key);
+uint64_t dataItemMapIndexOfKey(DataItem *map, DataItem *key);
 
 void dataItemMapInsertKeyValue(DataItem *map, DataItem *key, DataItem *value);
 
