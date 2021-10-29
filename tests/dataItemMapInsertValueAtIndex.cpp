@@ -42,7 +42,7 @@ TEST(dataItemInsertItemAtIndexTest, dataItemInsertItemAtIndexZeroToSeven) {
 	dataItemArrayInsertElementAtIndex(arrayItem, specialItem, 7);
 
 	uint8_t *final = encode(arrayItem);
-	for(int i = 0; i < sizeof(finalZeroToSevenCbor); i++) {
+	for(uint64_t i = 0; i < sizeof(finalZeroToSevenCbor); i++) {
 		EXPECT_EQ(final[i], finalZeroToSevenCbor[i]);
 	}
 }
@@ -68,7 +68,7 @@ TEST(dataItemInsertItemAtIndexTest, dataItemInsertItemAtIndexSevenToZero) {
 	dataItemArrayInsertElementAtIndex(arrayItem, specialItem, 0);
 
 	uint8_t *final = encode(arrayItem);
-	for(int i = 0; i < sizeof(finalSevenToZeroCbor); i++) {
+	for(uint64_t i = 0; i < sizeof(finalSevenToZeroCbor); i++) {
 		EXPECT_EQ(final[i], finalSevenToZeroCbor[i]);
 	}
 }
@@ -94,7 +94,7 @@ TEST(dataItemInsertItemAtIndexTest, dataItemInsertItemAtIndexRandom) {
 	dataItemArrayInsertElementAtIndex(arrayItem, specialItem, 7);
 
 	uint8_t *final = encode(arrayItem);
-	for(int i = 0; i < sizeof(finalRandomCbor); i++) {
+	for(uint64_t i = 0; i < sizeof(finalRandomCbor); i++) {
 		EXPECT_EQ(final[i], finalRandomCbor[i]);
 }
 }

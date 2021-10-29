@@ -37,8 +37,8 @@ uint8_t *encode(DataItem *dataItem) {
 
 	if(24 <= shortCount && shortCount <= 27) {
 		uint8_t extendedBytes = exp2(shortCount - 24);
-		for(int i = 0; i < extendedBytes; i++) {
-			int shiftCount = ((extendedBytes - 1 - i) * 8);
+		for(uint64_t i = 0; i < extendedBytes; i++) {
+			uint64_t shiftCount = ((extendedBytes - 1 - i) * 8);
 			uint64_t mask = (uint64_t)0xFF << shiftCount;
 			*cbor_ptr++ = (dataItem->extendedCount & mask) >> shiftCount;
 		}
@@ -52,7 +52,7 @@ uint8_t *encode(DataItem *dataItem) {
 
 		case BYTE_STRING: case UTF_8:
 		{
-			for(int i = 0; i < count; i++) {
+			for(uint64_t i = 0; i < count; i++) {
 				*cbor_ptr++ = dataItem->payload[i];
 			}
 			break;
@@ -60,9 +60,9 @@ uint8_t *encode(DataItem *dataItem) {
 
 		case ARRAY:
 		{	
-			for(int i = 0; i < count; i++) {
+			for(uint64_t i = 0; i < count; i++) {
 				uint8_t *item = encode(dataItem->array[i]);
-				for(int j = 0; j < dataItemByteCount(dataItem->array[i]); j++) {
+				for(uint64_t j = 0; j < dataItemByteCount(dataItem->array[i]); j++) {
 					*cbor_ptr++ = *item++;
 				}
 			}
@@ -71,14 +71,14 @@ uint8_t *encode(DataItem *dataItem) {
 		
 		case MAP:
 		{
-			for(int i = 0; i < count; i++) {
+			for(uint64_t i = 0; i < count; i++) {
 				uint8_t *key = encode(dataItem->keys[i]);
-				for(int j = 0; j < dataItemByteCount(dataItem->keys[i]); j++) {
+				for(uint64_t j = 0; j < dataItemByteCount(dataItem->keys[i]); j++) {
 					*cbor_ptr++ = *key++;
 				}
 
 				uint8_t *value = encode(dataItem->values[i]);
-				for(int j = 0; j < dataItemByteCount(dataItem->values[i]); j++) {
+				for(uint64_t j = 0; j < dataItemByteCount(dataItem->values[i]); j++) {
 					*cbor_ptr++ = *value++;
 				}
 			}
@@ -89,7 +89,7 @@ uint8_t *encode(DataItem *dataItem) {
 		{
 			DataItem *content = dataItem->content;
 			uint8_t *contentCbor = encode(content);
-			for(int i = 0; i < dataItemByteCount(content); i++) {
+			for(uint64_t i = 0; i < dataItemByteCount(content); i++) {
 				*cbor_ptr++ = *contentCbor++;
 			}
 			break;

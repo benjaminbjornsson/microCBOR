@@ -37,7 +37,7 @@ DataItem **dataItemInsertAtIndex(DataItem **dataItem, DataItem *element, uint64_
 	DataItem **newArray = (DataItem **)malloc(sizeof(DataItem *) * (length + 1));
 
 	newArray[index] = element;
-	for(int i = 0; i < length; i++) {
+	for(uint64_t i = 0; i < length; i++) {
 		newArray[i >= index ? i + 1 : i] = dataItem[i];
 	}
 
@@ -50,7 +50,7 @@ DataItem **dataItemRemoveAtIndex(DataItem **dataItem, uint64_t index, uint64_t l
 	DataItem **newArray = (DataItem **)malloc(sizeof(DataItem *) * (length - 1));
 	
 	DataItem *element;
-	for(int i = 0; i < length; i++) {
+	for(uint64_t i = 0; i < length; i++) {
 		if(i == index) {
 			element = dataItem[i];
 		} else {
@@ -167,21 +167,21 @@ bool dataItemEqual(DataItem *item1, DataItem *item2) {
 	switch (majorType)
 	{
 		case BYTE_STRING: case UTF_8:
-			for(int i = 0; i < count; i++) {
+			for(uint64_t i = 0; i < count; i++) {
 				if(item1->payload[i] != item2->payload[i])
 					return false;
 			}
 			break;
 		
 		case ARRAY:
-			for(int i = 0; i < count; i++) {
+			for(uint64_t i = 0; i < count; i++) {
 				if(!dataItemEqual(item1->array[i], item2->array[i]))
 					return false;
 			}
 			break;
 		
 		case MAP:
-			for(int i = 0; i < count; i++) {
+			for(uint64_t i = 0; i < count; i++) {
 				if(!dataItemEqual(item1->keys[i], item2->keys[i]))
 					return false;
 				if(!dataItemEqual(item1->values[i], item2->values[i]))
@@ -227,7 +227,7 @@ bool dataItemLessThanOrEqual(DataItem *key1, DataItem *key2) {
 			return dataItemLessThanOrEqual(key1->content, key2->content);
 	}
 
-	for(int i = 0; i < count1; i++) {
+	for(uint64_t i = 0; i < count1; i++) {
 		if(key1->payload[i] < key2->payload[i]) {
 			return true;
 		} else if(key1->payload[i] > key2->payload[i]) {
@@ -252,14 +252,14 @@ void dataItemFree(DataItem *dataItem) {
 			break;
 		
 		case ARRAY:
-			for(int i = 0; i < count; i++) {
+			for(uint64_t i = 0; i < count; i++) {
 				dataItemFree(dataItem->array[i]);
 			}
 			break;
 			free(dataItem->array);
 		
 		case MAP:
-			for(int i = 0; i < count; i++) {
+			for(uint64_t i = 0; i < count; i++) {
 				dataItemFree(dataItem->keys[i]);
 				dataItemFree(dataItem->values[i]);
 			}
@@ -326,7 +326,7 @@ void dataItemMapInsertKeyValue(DataItem *map, DataItem *key, DataItem *value) {
 	uint64_t index = 0;
 
 	uint64_t count = dataItemCount(map);
-	for(int i = 0; i < count; i++) {
+	for(uint64_t i = 0; i < count; i++) {
 		if(dataItemLessThanOrEqual(key, map->keys[i]))
 			break;
 		index++;

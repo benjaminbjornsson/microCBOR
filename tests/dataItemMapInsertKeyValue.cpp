@@ -40,7 +40,7 @@ TEST(dataItemMapInsertKeyValueTest, dataItemMapInsertKeyValue) {
 
 	uint8_t *finalCbor = encode(mapItem);
 
-	for(int i = 0; i < sizeof(finalMapCbor1); i++) {
+	for(uint64_t i = 0; i < sizeof(finalMapCbor1); i++) {
 		EXPECT_EQ(finalCbor[i], finalMapCbor1[i]);
 	}
 }
@@ -63,7 +63,7 @@ TEST(dataItemMapInsertKeyValueTest, dataItemMapInsertKeyValueReverse) {
 
 	uint8_t *finalCbor = encode(mapItem);
 
-	for(int i = 0; i < sizeof(finalMapCbor1); i++) {
+	for(uint64_t i = 0; i < sizeof(finalMapCbor1); i++) {
 		EXPECT_EQ(finalCbor[i], finalMapCbor1[i]);
 	}
 }
@@ -86,7 +86,7 @@ TEST(dataItemMapInsertKeyValueTest, dataItemMapInsertKeyValueByteStringAsKey) {
 
 	uint8_t *finalCbor = encode(mapItem);
 
-	for(int i = 0; i < sizeof(finalMapCbor2); i++) {
+	for(uint64_t i = 0; i < sizeof(finalMapCbor2); i++) {
 		EXPECT_EQ(finalCbor[i], finalMapCbor2[i]);
 	}
 }
