@@ -64,6 +64,28 @@ DataItem **dataItemRemoveAtIndex(DataItem **dataItem, uint64_t index, uint64_t l
 	return newArray;
 }
 
+void dataItemSetCount(DataItem *dataItem, uint64_t count) {
+	uint8_t shortCount;
+	if (0 <= count && count <= 23) {
+		shortCount = count;
+		dataItem->extendedCount = 0;
+	} else if (24 <= count && count <= 0xFF) {
+		shortCount = 24;
+		dataItem->extendedCount = count;
+	} else if (0x0100 <= count && count <= 0xFFFF) {
+		shortCount = 25;
+		dataItem->extendedCount = count;
+	} else if (0x10000 <= count && count <= 0xFFFFFFFF) {
+		shortCount = 26;
+		dataItem->extendedCount = count;
+	} else if (0x100000000 <= count && count <= 0xFFFFFFFFFFFFFFFF) {
+		shortCount = 27;
+		dataItem->extendedCount = count;
+	}
+
+	dataItem->header = (dataItem->header & 0xE0) | (shortCount & 0x1F);
+}
+
 /*
 	#######################################
 	Generic Functions
@@ -85,28 +107,6 @@ uint64_t dataItemCount(DataItem *dataItem) {
     } else {
         return shortCount;
     }
-}
-
-void dataItemSetCount(DataItem *dataItem, uint64_t count) {
-	uint8_t shortCount;
-	if (0 <= count && count <= 23) {
-		shortCount = count;
-		dataItem->extendedCount = 0;
-	} else if (24 <= count && count <= 0xFF) {
-		shortCount = 24;
-		dataItem->extendedCount = count;
-	} else if (0x0100 <= count && count <= 0xFFFF) {
-		shortCount = 25;
-		dataItem->extendedCount = count;
-	} else if (0x10000 <= count && count <= 0xFFFFFFFF) {
-		shortCount = 26;
-		dataItem->extendedCount = count;
-	} else if (0x100000000 <= count && count <= 0xFFFFFFFFFFFFFFFF) {
-		shortCount = 27;
-		dataItem->extendedCount = count;
-	}
-
-	dataItem->header = (dataItem->header & 0xE0) | (shortCount & 0x1F);
 }
 
 uint64_t dataItemByteCount(DataItem *dataItem) {
