@@ -165,8 +165,7 @@ bool dataItemEqual(DataItem *item1, DataItem *item2) {
 		return false;
 	
 	uint64_t count = dataItemCount(item1);
-	uint8_t majorType = dataItemMajorType(item1);
-	switch (majorType)
+	switch (dataItemMajorType(item1))
 	{
 		case BYTE_STRING: case UTF_8:
 			for(uint64_t i = 0; i < count; i++) {
@@ -242,8 +241,7 @@ bool dataItemLessThanOrEqual(DataItem *key1, DataItem *key2) {
 
 void dataItemFree(DataItem *dataItem) {
 	uint64_t count = dataItemCount(dataItem);
-	uint8_t majorType = dataItemMajorType(dataItem);
-	switch (majorType) {
+	switch (dataItemMajorType(dataItem)) {
 		case UNSIGNED_INT: case NEGATIVE_INT:
 		case SPECIAL:
 			break;
@@ -328,7 +326,7 @@ uint64_t dataItemMapIndexOfKey(DataItem *map, DataItem *key) {
 
 void dataItemMapInsertKeyValue(DataItem *map, DataItem *key, DataItem *value) {
 	uint64_t index = 0;
-	
+
 	uint64_t count = dataItemCount(map);
 	for(uint64_t i = 0; i < count; i++) {
 		if(dataItemLessThanOrEqual(key, map->keys[i]))
@@ -343,8 +341,7 @@ void dataItemMapInsertKeyValue(DataItem *map, DataItem *key, DataItem *value) {
 }
 
 void dataItemMapChangeValueAtKey(DataItem *map, DataItem *key, DataItem *value) {
-	uint64_t count = dataItemCount(map);
-	for(uint64_t i = 0; i < count; i++) {
+	for(uint64_t i = 0; i < dataItemCount(map); i++) {
 		if(dataItemEqual(key, map->keys[i])) {
 			dataItemFree(map->values[i]);
 			map->values[i] = value;

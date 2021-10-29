@@ -44,8 +44,7 @@ uint8_t *encode(DataItem *dataItem) {
 		}
 	}
 
-	uint8_t majorType = dataItemMajorType(dataItem);
-	switch(majorType) {
+	switch(dataItemMajorType(dataItem)) {
 		case UNSIGNED_INT: case SPECIAL:
 		case NEGATIVE_INT:
 			break;

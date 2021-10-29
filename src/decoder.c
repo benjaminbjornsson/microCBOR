@@ -42,8 +42,7 @@ DataItem *decode(uint8_t *byteArray) {
 	}
 
 	uint64_t count = dataItemCount(dataItem);
-	uint8_t majorType = dataItem->header >> 5;
-	switch(majorType) {
+	switch(dataItemMajorType(dataItem)) {
 		case UNSIGNED_INT: case NEGATIVE_INT:
 		case SPECIAL:
 			break;
