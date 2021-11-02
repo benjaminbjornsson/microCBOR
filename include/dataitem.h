@@ -33,11 +33,15 @@
 typedef struct DataItem {
 	uint8_t header;
 	uint64_t extendedCount;
-	uint8_t *payload;
-	struct DataItem **array;
-	struct DataItem **keys;
-	struct DataItem **values;
-	struct DataItem *content;
+	union {
+		uint8_t *payload;
+		struct DataItem **array;
+		struct {
+			struct DataItem **keys;
+			struct DataItem **values;
+		};
+		struct DataItem *content;
+	};
 } DataItem;
 
 /*

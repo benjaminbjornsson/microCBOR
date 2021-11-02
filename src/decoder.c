@@ -27,11 +27,6 @@ DataItem *decode(uint8_t *byteArray) {
 	DataItem *dataItem = (DataItem *)malloc(sizeof(DataItem));
 	dataItem->header = *byteArray++;
 	dataItem->extendedCount = 0;
-	dataItem->payload = NULL;
-	dataItem->array = NULL;
-	dataItem->keys = NULL;
-	dataItem->values = NULL;
-	dataItem->content = NULL;
 
 	uint8_t shortCount = dataItemShortCount(dataItem);
 	if(24 <= shortCount && shortCount <= 27) {
