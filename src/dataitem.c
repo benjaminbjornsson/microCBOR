@@ -254,17 +254,17 @@ void dataItemFree(DataItem *dataItem) {
 			for(uint64_t i = 0; i < count; i++) {
 				dataItemFree(dataItem->array[i]);
 			}
-			break;
 			free(dataItem->array);
+			break;
 		
 		case MAP:
 			for(uint64_t i = 0; i < count; i++) {
 				dataItemFree(dataItem->keys[i]);
 				dataItemFree(dataItem->values[i]);
 			}
-			break;
 			free(dataItem->keys);
 			free(dataItem->values);
+			break;
 		
 		case TAG:
 			dataItemFree(dataItem->content);
