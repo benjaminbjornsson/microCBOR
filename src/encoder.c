@@ -20,21 +20,12 @@
 #include "encoder.h"
 
 uint8_t *encode(DataItem *dataItem) {
-
-	uint8_t shortCount = dataItem->header & 0x1F;
-
-	uint64_t count;
-	if(24 <= shortCount && shortCount <= 27) {
-		count = dataItem->extendedCount;
-	} else {
-		count = shortCount;
-	}
-
 	uint8_t *cbor = (uint8_t *)malloc(sizeof(uint8_t) * dataItemByteCount(dataItem));
 	uint8_t *cbor_ptr = cbor;
 
 	*cbor_ptr++ = dataItem->header;
 
+	uint8_t shortCount = dataItem->header & 0x1F;
 	if(24 <= shortCount && shortCount <= 27) {
 		uint8_t extendedBytes = exp2(shortCount - 24);
 		for(uint64_t i = 0; i < extendedBytes; i++) {
@@ -44,6 +35,7 @@ uint8_t *encode(DataItem *dataItem) {
 		}
 	}
 
+	uint64_t count = dataItemCount(dataItem);
 	switch(dataItemMajorType(dataItem)) {
 		case UNSIGNED_INT: case SPECIAL:
 		case NEGATIVE_INT:
