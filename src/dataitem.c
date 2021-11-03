@@ -103,7 +103,7 @@ uint8_t dataItemShortCount(DataItem *dataItem) {
 }
 
 uint64_t dataItemCount(DataItem *dataItem) {
-    uint8_t shortCount = dataItem->header & 0x1F;
+    uint8_t shortCount = dataItemShortCount(dataItem);
     if(24 <= shortCount && shortCount <= 27) {
         return dataItem->extendedCount;
     } else {
@@ -251,19 +251,23 @@ void dataItemFree(DataItem *dataItem) {
 			break;
 		
 		case ARRAY:
-			for(uint64_t i = 0; i < count; i++) {
-				dataItemFree(dataItem->array[i]);
+			if(count > 0) {
+				for(uint64_t i = 0; i < count; i++) {
+					dataItemFree(dataItem->array[i]);
+				}
+				free(dataItem->array);
 			}
-			free(dataItem->array);
 			break;
 		
 		case MAP:
-			for(uint64_t i = 0; i < count; i++) {
-				dataItemFree(dataItem->keys[i]);
-				dataItemFree(dataItem->values[i]);
+			if(count > 0) {
+				for(uint64_t i = 0; i < count; i++) {
+					dataItemFree(dataItem->keys[i]);
+					dataItemFree(dataItem->values[i]);
+				}
+				free(dataItem->keys);
+				free(dataItem->values);
 			}
-			free(dataItem->keys);
-			free(dataItem->values);
 			break;
 		
 		case TAG:
@@ -319,8 +323,7 @@ void dataItemMapRemoveKey(DataItem *map, DataItem *key) {
 }
 
 uint64_t dataItemMapIndexOfKey(DataItem *map, DataItem *key) {
-	uint64_t count = dataItemCount(map);
-	return dataItemIndexOfItem(map->keys, key, count);
+	return dataItemIndexOfItem(map->keys, key, dataItemCount(map));
 }
 
 void dataItemMapInsertKeyValue(DataItem *map, DataItem *key, DataItem *value) {
