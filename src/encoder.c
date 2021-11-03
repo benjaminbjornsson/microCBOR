@@ -21,17 +21,17 @@
 
 uint8_t *encode(DataItem *dataItem) {
 	uint8_t *cbor = (uint8_t *)malloc(sizeof(uint8_t) * dataItemByteCount(dataItem));
-	uint8_t *cbor_ptr = cbor;
+	uint8_t *cborPtr = cbor;
 
-	*cbor_ptr++ = dataItem->header;
+	*cborPtr++ = dataItem->header;
 
-	uint8_t shortCount = dataItem->header & 0x1F;
+	uint8_t shortCount = dataItemShortCount(dataItem);
 	if(24 <= shortCount && shortCount <= 27) {
 		uint8_t extendedBytes = exp2(shortCount - 24);
 		for(uint64_t i = 0; i < extendedBytes; i++) {
 			uint64_t shiftCount = ((extendedBytes - 1 - i) * 8);
 			uint64_t mask = (uint64_t)0xFF << shiftCount;
-			*cbor_ptr++ = (dataItem->extendedCount & mask) >> shiftCount;
+			*cborPtr++ = (dataItem->extendedCount & mask) >> shiftCount;
 		}
 	}
 
@@ -44,7 +44,7 @@ uint8_t *encode(DataItem *dataItem) {
 		case BYTE_STRING: case UTF_8:
 		{
 			for(uint64_t i = 0; i < count; i++) {
-				*cbor_ptr++ = dataItem->payload[i];
+				*cborPtr++ = dataItem->payload[i];
 			}
 			break;
 		}
@@ -53,9 +53,11 @@ uint8_t *encode(DataItem *dataItem) {
 		{	
 			for(uint64_t i = 0; i < count; i++) {
 				uint8_t *item = encode(dataItem->array[i]);
+				uint8_t *itemPtr = item;
 				for(uint64_t j = 0; j < dataItemByteCount(dataItem->array[i]); j++) {
-					*cbor_ptr++ = *item++;
+					*cborPtr++ = *itemPtr++;
 				}
+				free(item);
 			}
 			break;
 		}
@@ -64,25 +66,30 @@ uint8_t *encode(DataItem *dataItem) {
 		{
 			for(uint64_t i = 0; i < count; i++) {
 				uint8_t *key = encode(dataItem->keys[i]);
+				uint8_t *keyPtr = key;
 				for(uint64_t j = 0; j < dataItemByteCount(dataItem->keys[i]); j++) {
-					*cbor_ptr++ = *key++;
+					*cborPtr++ = *keyPtr++;
 				}
+				free(key);
 
 				uint8_t *value = encode(dataItem->values[i]);
+				uint8_t *valuePtr = value;
 				for(uint64_t j = 0; j < dataItemByteCount(dataItem->values[i]); j++) {
-					*cbor_ptr++ = *value++;
+					*cborPtr++ = *valuePtr++;
 				}
+				free(value);
 			}
 			break;
 		}
 
 		case TAG:
 		{
-			DataItem *content = dataItem->content;
-			uint8_t *contentCbor = encode(content);
-			for(uint64_t i = 0; i < dataItemByteCount(content); i++) {
-				*cbor_ptr++ = *contentCbor++;
+			uint8_t *content = encode(dataItem->content);
+			uint8_t *contentPtr = content;
+			for(uint64_t i = 0; i < dataItemByteCount(dataItem->content); i++) {
+				*cborPtr++ = *contentPtr++;
 			}
+			free(content);
 			break;
 		}
 	}
