@@ -17,9 +17,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <assert.h>
 #include "encoder.h"
 
 uint8_t *encode(DataItem *dataItem) {
+	assert(dataItem != NULL);
+	
 	uint8_t *cbor = (uint8_t *)malloc(sizeof(uint8_t) * dataItemByteCount(dataItem));
 	uint8_t *cborPtr = cbor;
 

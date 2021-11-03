@@ -16,6 +16,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <assert.h>
 #include "dataitem.h"
 
 #define	INVALID_INDEX	-1
@@ -27,7 +28,11 @@
 */
 
 uint64_t dataItemIndexOfItem(DataItem **array, DataItem *item, uint64_t count) {
+	assert(array != NULL);
+	assert(item != NULL);
+
 	for(uint64_t i = 0; i < count; i++)	{
+		assert(array[i] != NULL);
 		if(dataItemEqual(item, array[i]))
 			return i;
 	}
@@ -36,10 +41,15 @@ uint64_t dataItemIndexOfItem(DataItem **array, DataItem *item, uint64_t count) {
 }
 
 DataItem **dataItemInsertAtIndex(DataItem **dataItem, DataItem *element, uint64_t index, uint64_t length) {
+	assert(dataItem != NULL);
+	assert(element != NULL);
+	assert(index <= length);
+
 	DataItem **newArray = (DataItem **)malloc(sizeof(DataItem *) * (length + 1));
 
 	newArray[index] = element;
 	for(uint64_t i = 0; i < length; i++) {
+		assert(dataItem[i] != NULL);
 		newArray[i >= index ? i + 1 : i] = dataItem[i];
 	}
 
@@ -49,10 +59,16 @@ DataItem **dataItemInsertAtIndex(DataItem **dataItem, DataItem *element, uint64_
 }
 
 DataItem **dataItemRemoveAtIndex(DataItem **dataItem, uint64_t index, uint64_t length) {
+	assert(dataItem != NULL);
+	assert(index < length);
+
 	DataItem **newArray = (DataItem **)malloc(sizeof(DataItem *) * (length - 1));
+	if(newArray == NULL)
+		return NULL;
 	
 	DataItem *element;
 	for(uint64_t i = 0; i < length; i++) {
+		assert(dataItem[i] != NULL);
 		if(i == index) {
 			element = dataItem[i];
 		} else {
@@ -67,6 +83,8 @@ DataItem **dataItemRemoveAtIndex(DataItem **dataItem, uint64_t index, uint64_t l
 }
 
 void dataItemSetCount(DataItem *dataItem, uint64_t count) {
+	assert(dataItem != NULL);
+
 	uint8_t shortCount;
 	if (0 <= count && count <= 23) {
 		shortCount = count;
@@ -95,14 +113,20 @@ void dataItemSetCount(DataItem *dataItem, uint64_t count) {
 */
 
 uint8_t dataItemMajorType(DataItem *dataItem) {
+	assert(dataItem != NULL);
+
 	return (dataItem->header >> 5);
 }
 
 uint8_t dataItemShortCount(DataItem *dataItem) {
+	assert(dataItem != NULL);
+
 	return (dataItem->header & 0x1F);
 }
 
 uint64_t dataItemCount(DataItem *dataItem) {
+	assert(dataItem != NULL);
+
     uint8_t shortCount = dataItemShortCount(dataItem);
     if(24 <= shortCount && shortCount <= 27) {
         return dataItem->extendedCount;
@@ -112,6 +136,8 @@ uint64_t dataItemCount(DataItem *dataItem) {
 }
 
 uint64_t dataItemByteCount(DataItem *dataItem) {
+	assert(dataItem != NULL);
+
 	uint64_t byteCount = 1;
 
 	uint64_t count = dataItemCount(dataItem);
@@ -156,52 +182,58 @@ uint64_t dataItemByteCount(DataItem *dataItem) {
 	return byteCount;
 }
 
-bool dataItemEqual(DataItem *item1, DataItem *item2) {
-	if(item1->header != item2->header)
+bool dataItemEqual(DataItem *dataItem1, DataItem *dataItem2) {
+	assert(dataItem1 != NULL);
+	assert(dataItem2 != NULL);
+
+	if(dataItem1->header != dataItem2->header)
 		return false;
 	
-	if(item1->extendedCount != item2->extendedCount)
+	if(dataItem1->extendedCount != dataItem2->extendedCount)
 		return false;
 	
-	uint64_t count = dataItemCount(item1);
-	switch (dataItemMajorType(item1))
+	uint64_t count = dataItemCount(dataItem1);
+	switch (dataItemMajorType(dataItem1))
 	{
 		case BYTE_STRING: case UTF_8:
 			for(uint64_t i = 0; i < count; i++) {
-				if(item1->payload[i] != item2->payload[i])
+				if(dataItem1->payload[i] != dataItem2->payload[i])
 					return false;
 			}
 			break;
 		
 		case ARRAY:
 			for(uint64_t i = 0; i < count; i++) {
-				if(!dataItemEqual(item1->array[i], item2->array[i]))
+				if(!dataItemEqual(dataItem1->array[i], dataItem2->array[i]))
 					return false;
 			}
 			break;
 		
 		case MAP:
 			for(uint64_t i = 0; i < count; i++) {
-				if(!dataItemEqual(item1->keys[i], item2->keys[i]))
+				if(!dataItemEqual(dataItem1->keys[i], dataItem2->keys[i]))
 					return false;
-				if(!dataItemEqual(item1->values[i], item2->values[i]))
+				if(!dataItemEqual(dataItem1->values[i], dataItem2->values[i]))
 					return false;
 			}
 			break;
 		
 		case TAG:
-			if(!dataItemEqual(item1->content, item2->content))
+			if(!dataItemEqual(dataItem1->content, dataItem2->content))
 				return false;
 			break;
 	}
 	
-	if(dataItemByteCount(item1) != dataItemByteCount(item2))
+	if(dataItemByteCount(dataItem1) != dataItemByteCount(dataItem2))
 		return false;
 	
 	return true;
 }
 
 bool dataItemLessThanOrEqual(DataItem *key1, DataItem *key2) {
+	assert(key1 != NULL);
+	assert(key2 != NULL);
+
 	uint8_t majorType1 = dataItemMajorType(key1);
 	uint8_t majorType2 = dataItemMajorType(key2);
 	
@@ -239,6 +271,8 @@ bool dataItemLessThanOrEqual(DataItem *key1, DataItem *key2) {
 }
 
 void dataItemFree(DataItem *dataItem) {
+	assert(dataItem != NULL);
+
 	uint64_t count = dataItemCount(dataItem);
 	switch (dataItemMajorType(dataItem)) {
 		case UNSIGNED_INT: case NEGATIVE_INT:
@@ -285,6 +319,9 @@ void dataItemFree(DataItem *dataItem) {
 */
 
 void dataItemArrayInsertElementAtIndex(DataItem *array, DataItem *element, uint64_t index) {
+	assert(array != NULL);
+	assert(element != NULL);
+
 	uint64_t count = dataItemCount(array);
 
 	array->array = dataItemInsertAtIndex(array->array, element, index, count);
@@ -293,6 +330,8 @@ void dataItemArrayInsertElementAtIndex(DataItem *array, DataItem *element, uint6
 }
 
 void dataItemArrayRemoveElementAtIndex(DataItem *array, uint64_t index) {
+	assert(array != NULL);
+
 	uint64_t count = dataItemCount(array);
 
 	array->array = dataItemRemoveAtIndex(array->array, index, count);
@@ -301,6 +340,9 @@ void dataItemArrayRemoveElementAtIndex(DataItem *array, uint64_t index) {
 }
 
 void dataItemArrayAppendElement(DataItem *array, DataItem *element) {
+	assert(array != NULL);
+	assert(element != NULL);
+
 	dataItemArrayInsertElementAtIndex(array, element, dataItemCount(array));
 }
 
@@ -311,6 +353,9 @@ void dataItemArrayAppendElement(DataItem *array, DataItem *element) {
 */
 
 void dataItemMapRemoveKey(DataItem *map, DataItem *key) {
+	assert(map != NULL);
+	assert(key != NULL);
+
 	uint64_t count = dataItemCount(map);
 	uint64_t index = dataItemIndexOfItem(map->keys, key, count);
 	if(index == INVALID_INDEX)
@@ -323,10 +368,17 @@ void dataItemMapRemoveKey(DataItem *map, DataItem *key) {
 }
 
 uint64_t dataItemMapIndexOfKey(DataItem *map, DataItem *key) {
+	assert(map != NULL);
+	assert(key != NULL);
+
 	return dataItemIndexOfItem(map->keys, key, dataItemCount(map));
 }
 
 void dataItemMapInsertKeyValue(DataItem *map, DataItem *key, DataItem *value) {
+	assert(map != NULL);
+	assert(key != NULL);
+	assert(value != NULL);
+
 	uint64_t index = 0;
 
 	uint64_t count = dataItemCount(map);
@@ -343,6 +395,10 @@ void dataItemMapInsertKeyValue(DataItem *map, DataItem *key, DataItem *value) {
 }
 
 void dataItemMapChangeValueAtKey(DataItem *map, DataItem *key, DataItem *value) {
+	assert(map != NULL);
+	assert(key != NULL);
+	assert(value != NULL);
+	
 	for(uint64_t i = 0; i < dataItemCount(map); i++) {
 		if(dataItemEqual(key, map->keys[i])) {
 			dataItemFree(map->values[i]);

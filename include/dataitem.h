@@ -60,7 +60,7 @@ void dataItemSetCount(DataItem *dataItem, uint64_t count);
 
 uint64_t dataItemByteCount(DataItem *dataItem);
 
-bool dataItemEqual(DataItem *item1, DataItem *item2);
+bool dataItemEqual(DataItem *dataItem1, DataItem *dataItem2);
 
 bool dataItemLessThanOrEqual(DataItem *key1, DataItem *key2);
 
