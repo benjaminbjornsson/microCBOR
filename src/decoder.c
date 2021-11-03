@@ -26,11 +26,10 @@
 DataItem *decode(uint8_t *byteArray) {
 	DataItem *dataItem = (DataItem *)malloc(sizeof(DataItem));
 	dataItem->header = *byteArray++;
-	dataItem->extendedCount = 0;
+	dataItem->extendedCount = 0x00;
 
 	uint8_t shortCount = dataItemShortCount(dataItem);
 	if(24 <= shortCount && shortCount <= 27) {
-		dataItem->extendedCount = 0x00;
 		for(uint64_t i = 0; i < exp2(shortCount - 24); i++) {
 			dataItem->extendedCount = dataItem->extendedCount << 8 | *byteArray++;
 		}
@@ -43,16 +42,17 @@ DataItem *decode(uint8_t *byteArray) {
 			break;
 
 		case BYTE_STRING: case UTF_8:
+		{
 			dataItem->payload = (uint8_t *)malloc(sizeof(uint8_t) * count);
 			memcpy(dataItem->payload, byteArray, count);
 			byteArray += count;
 			break;
+		}
 
 		case ARRAY:
 		{
 			dataItem->array = (DataItem **)malloc(sizeof(DataItem *) * count);
-			uint64_t i;
-			for(i = 0; i < count; i++) {
+			for(uint64_t i = 0; i < count; i++) {
 				dataItem->array[i] = decode(byteArray);
 				byteArray += dataItemByteCount(dataItem->array[i]);
 			}
@@ -63,8 +63,7 @@ DataItem *decode(uint8_t *byteArray) {
 		{
 			dataItem->keys = (DataItem **)malloc(sizeof(DataItem *) * count);
 			dataItem->values = (DataItem **)malloc(sizeof(DataItem *) * count);
-			uint64_t i;
-			for(i = 0; i < count; i++) {
+			for(uint64_t i = 0; i < count; i++) {
 				dataItem->keys[i] = decode(byteArray);
 				byteArray += dataItemByteCount(dataItem->keys[i]);
 
@@ -76,9 +75,8 @@ DataItem *decode(uint8_t *byteArray) {
 
 		case TAG:
 		{
-			DataItem *tagContent = decode(byteArray);
-			dataItem->content = tagContent;
-			byteArray += dataItemByteCount(tagContent);
+			dataItem->content = decode(byteArray);
+			byteArray += dataItemByteCount(dataItem->content);
 			break;
 		}
 	}
