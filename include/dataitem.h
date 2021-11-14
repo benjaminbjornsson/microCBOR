@@ -64,6 +64,8 @@ bool dataItemEqual(DataItem *dataItem1, DataItem *dataItem2);
 
 bool dataItemLessThanOrEqual(DataItem *key1, DataItem *key2);
 
+DataItem *dataItemCopy(DataItem *dataItem);
+
 void dataItemFree(DataItem *dataItem);
 
 /*

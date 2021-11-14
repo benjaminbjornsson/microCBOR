@@ -18,6 +18,8 @@
 #include <stdbool.h>
 #include <assert.h>
 #include "dataitem.h"
+#include "decoder.h"
+#include "encoder.h"
 
 #define	INVALID_INDEX	-1
 
@@ -268,6 +270,16 @@ bool dataItemLessThanOrEqual(DataItem *key1, DataItem *key2) {
 	}
 
 	return false;
+}
+
+DataItem *dataItemCopy(DataItem *dataItem) {
+	assert(dataItem != NULL);
+
+	uint8_t *CBORArray = encode(dataItem);
+	if(CBORArray == NULL)
+		return NULL;
+	
+	return decode(CBORArray);
 }
 
 void dataItemFree(DataItem *dataItem) {
