@@ -275,11 +275,11 @@ bool dataItemLessThanOrEqual(DataItem *key1, DataItem *key2) {
 DataItem *dataItemCopy(DataItem *dataItem) {
 	assert(dataItem != NULL);
 
-	uint8_t *CBORArray = encode(dataItem);
+	uint8_t *CBORArray = microCBOREncode(dataItem);
 	if(CBORArray == NULL)
 		return NULL;
 	
-	return decode(CBORArray);
+	return microCBORDecode(CBORArray);
 }
 
 void dataItemFree(DataItem *dataItem) {

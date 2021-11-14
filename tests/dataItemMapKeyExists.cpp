@@ -20,94 +20,94 @@ uint8_t key3Cbor[] = { 0x62, 0x78, 0x79 };
 uint8_t key4Cbor[] = { 0xC0, 0x00 };
 
 TEST(dataItemMapIndexOfKeyTest, dataItemExistsTest) {
-	DataItem *map1Item = decode(map1Cbor);
-	DataItem *map2Item = decode(map2Cbor);
-	DataItem *map3Item = decode(map3Cbor);
-	DataItem *map4Item = decode(map4Cbor);
-	DataItem *map5Item = decode(emptyMapCbor);
+	DataItem *map1Item = microCBORDecode(map1Cbor);
+	DataItem *map2Item = microCBORDecode(map2Cbor);
+	DataItem *map3Item = microCBORDecode(map3Cbor);
+	DataItem *map4Item = microCBORDecode(map4Cbor);
+	DataItem *map5Item = microCBORDecode(emptyMapCbor);
 	DataItem *keyItem;
 	
-	keyItem = decode(key1Cbor);
+	keyItem = microCBORDecode(key1Cbor);
 	EXPECT_EQ(dataItemMapIndexOfKey(map1Item, keyItem), 0);
 	free(keyItem);
 
-	keyItem = decode(key2Cbor);
+	keyItem = microCBORDecode(key2Cbor);
 	EXPECT_EQ(dataItemMapIndexOfKey(map1Item, keyItem), 1);
 	free(keyItem);
 
-	keyItem = decode(key3Cbor);
+	keyItem = microCBORDecode(key3Cbor);
 	EXPECT_EQ(dataItemMapIndexOfKey(map1Item, keyItem), 2);
 	free(keyItem);
 
-	keyItem = decode(key4Cbor);
+	keyItem = microCBORDecode(key4Cbor);
 	EXPECT_EQ(dataItemMapIndexOfKey(map1Item, keyItem), 3);
 	free(keyItem);
 
 	
-	keyItem = decode(key1Cbor);
+	keyItem = microCBORDecode(key1Cbor);
 	EXPECT_EQ(dataItemMapIndexOfKey(map2Item, keyItem), 0);
 	free(keyItem);
 
-	keyItem = decode(key2Cbor);
+	keyItem = microCBORDecode(key2Cbor);
 	EXPECT_EQ(dataItemMapIndexOfKey(map2Item, keyItem), 1);
 	free(keyItem);
 
-	keyItem = decode(key3Cbor);
+	keyItem = microCBORDecode(key3Cbor);
 	EXPECT_EQ(dataItemMapIndexOfKey(map2Item, keyItem), 2);
 	free(keyItem);
 
-	keyItem = decode(key4Cbor);
+	keyItem = microCBORDecode(key4Cbor);
 	EXPECT_EQ(dataItemMapIndexOfKey(map2Item, keyItem), -1);
 	free(keyItem);
 
 
-	keyItem = decode(key1Cbor);
+	keyItem = microCBORDecode(key1Cbor);
 	EXPECT_EQ(dataItemMapIndexOfKey(map3Item, keyItem), 0);
 	free(keyItem);
 
-	keyItem = decode(key2Cbor);
+	keyItem = microCBORDecode(key2Cbor);
 	EXPECT_EQ(dataItemMapIndexOfKey(map3Item, keyItem), 1);
 	free(keyItem);
 
-	keyItem = decode(key3Cbor);
+	keyItem = microCBORDecode(key3Cbor);
 	EXPECT_EQ(dataItemMapIndexOfKey(map3Item, keyItem), -1);
 	free(keyItem);
 
-	keyItem = decode(key4Cbor);
+	keyItem = microCBORDecode(key4Cbor);
 	EXPECT_EQ(dataItemMapIndexOfKey(map3Item, keyItem), -1);
 	free(keyItem);
 
 	
-	keyItem = decode(key1Cbor);
+	keyItem = microCBORDecode(key1Cbor);
 	EXPECT_EQ(dataItemMapIndexOfKey(map4Item, keyItem), 0);
 	free(keyItem);
 
-	keyItem = decode(key2Cbor);
+	keyItem = microCBORDecode(key2Cbor);
 	EXPECT_EQ(dataItemMapIndexOfKey(map4Item, keyItem), -1);
 	free(keyItem);
 
-	keyItem = decode(key3Cbor);
+	keyItem = microCBORDecode(key3Cbor);
 	EXPECT_EQ(dataItemMapIndexOfKey(map4Item, keyItem), -1);
 	free(keyItem);
 
-	keyItem = decode(key4Cbor);
+	keyItem = microCBORDecode(key4Cbor);
 	EXPECT_EQ(dataItemMapIndexOfKey(map4Item, keyItem), -1);
 	free(keyItem);
 
 	
-	keyItem = decode(key1Cbor);
+	keyItem = microCBORDecode(key1Cbor);
 	EXPECT_EQ(dataItemMapIndexOfKey(map5Item, keyItem), -1);
 	free(keyItem);
 
-	keyItem = decode(key2Cbor);
+	keyItem = microCBORDecode(key2Cbor);
 	EXPECT_EQ(dataItemMapIndexOfKey(map5Item, keyItem), -1);
 	free(keyItem);
 
-	keyItem = decode(key3Cbor);
+	keyItem = microCBORDecode(key3Cbor);
 	EXPECT_EQ(dataItemMapIndexOfKey(map5Item, keyItem), -1);
 	free(keyItem);
 
-	keyItem = decode(key4Cbor);
+	keyItem = microCBORDecode(key4Cbor);
 	EXPECT_EQ(dataItemMapIndexOfKey(map5Item, keyItem), -1);
 	free(keyItem);
 }

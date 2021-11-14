@@ -57,9 +57,9 @@ uint8_t fifthMiddleCbor[]       = { 0x1B, 0x7F, 0xFF, 0xFF, 0xFF, 0x7F, 0xFF, 0x
 uint8_t fifthUpperLimitCbor[]   = { 0x1B, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
 
 TEST(unsignedIntegerDataItemCountTest, firstRange) {
-    DataItem *firstLowerLimitItem = decode(firstLowerLimitCbor);
-    DataItem *firstMiddleItem = decode(firstMiddleCbor);
-    DataItem *firstUpperLimitItem = decode(firstUpperLimitCbor);
+    DataItem *firstLowerLimitItem = microCBORDecode(firstLowerLimitCbor);
+    DataItem *firstMiddleItem = microCBORDecode(firstMiddleCbor);
+    DataItem *firstUpperLimitItem = microCBORDecode(firstUpperLimitCbor);
 
 	uint64_t count;
 	count = dataItemCount(firstLowerLimitItem);
@@ -73,9 +73,9 @@ TEST(unsignedIntegerDataItemCountTest, firstRange) {
 }
 
 TEST(unsignedIntegerDataItemCountTest, secondRange) {
-    DataItem *secondLowerLimitItem = decode(secondLowerLimitCbor);
-    DataItem *secondMiddleItem = decode(secondMiddleCbor);
-    DataItem *secondUpperLimitItem = decode(secondUpperLimitCbor);
+    DataItem *secondLowerLimitItem = microCBORDecode(secondLowerLimitCbor);
+    DataItem *secondMiddleItem = microCBORDecode(secondMiddleCbor);
+    DataItem *secondUpperLimitItem = microCBORDecode(secondUpperLimitCbor);
 
 	uint64_t count;
 	count = dataItemCount(secondLowerLimitItem);
@@ -89,9 +89,9 @@ TEST(unsignedIntegerDataItemCountTest, secondRange) {
 }
 
 TEST(unsignedIntegerDataItemCountTest, thirdRange) {
-    DataItem *thirdLowerLimitItem = decode(thirdLowerLimitCbor);
-    DataItem *thirdMiddleItem = decode(thirdMiddleCbor);
-    DataItem *thirdUpperLimitItem = decode(thirdUpperLimitCbor);
+    DataItem *thirdLowerLimitItem = microCBORDecode(thirdLowerLimitCbor);
+    DataItem *thirdMiddleItem = microCBORDecode(thirdMiddleCbor);
+    DataItem *thirdUpperLimitItem = microCBORDecode(thirdUpperLimitCbor);
 
 	uint64_t count;
 	count = dataItemCount(thirdLowerLimitItem);
@@ -105,9 +105,9 @@ TEST(unsignedIntegerDataItemCountTest, thirdRange) {
 }
 
 TEST(unsignedIntegerDataItemCountTest, forthRange) {
-    DataItem *forthLowerLimitItem = decode(forthLowerLimitCbor);
-    DataItem *forthMiddleItem = decode(forthMiddleCbor);
-    DataItem *forthUpperLimitItem = decode(forthUpperLimitCbor);
+    DataItem *forthLowerLimitItem = microCBORDecode(forthLowerLimitCbor);
+    DataItem *forthMiddleItem = microCBORDecode(forthMiddleCbor);
+    DataItem *forthUpperLimitItem = microCBORDecode(forthUpperLimitCbor);
 
 	uint64_t count;
 	count = dataItemCount(forthLowerLimitItem);
@@ -121,9 +121,9 @@ TEST(unsignedIntegerDataItemCountTest, forthRange) {
 }
 
 TEST(unsignedIntegerDataItemCountTest, fifthRange) {
-    DataItem *fifthLowerLimitItem = decode(fifthLowerLimitCbor);
-    DataItem *fifthMiddleItem = decode(fifthMiddleCbor);
-    DataItem *fifthUpperLimitItem = decode(fifthUpperLimitCbor);
+    DataItem *fifthLowerLimitItem = microCBORDecode(fifthLowerLimitCbor);
+    DataItem *fifthMiddleItem = microCBORDecode(fifthMiddleCbor);
+    DataItem *fifthUpperLimitItem = microCBORDecode(fifthUpperLimitCbor);
 
 	uint64_t count;
 	count = dataItemCount(fifthLowerLimitItem);

@@ -17,23 +17,23 @@ uint8_t tagCbor[] = { 0xC0, 0x00 };	// 0(0)
 uint8_t specialCbor[] = { 0xF4 };	// false
 
 TEST(dataItemEqualTest, dataItemEqualTest) {
-	DataItem *unsignedIntegerItem = decode(unsignedIntegerCbor);
-	DataItem *negativeIntegerItem = decode(negativeIntegerCbor);
-	DataItem *utf8StringItem = decode(utf8StringCbor);
-	DataItem *byteStringItem = decode(byteStringCbor);
-	DataItem *arrayItem = decode(arrayCbor);
-	DataItem *mapItem = decode(mapCbor);
-	DataItem *tagItem = decode(tagCbor);
-	DataItem *specialItem = decode(specialCbor);
+	DataItem *unsignedIntegerItem = microCBORDecode(unsignedIntegerCbor);
+	DataItem *negativeIntegerItem = microCBORDecode(negativeIntegerCbor);
+	DataItem *utf8StringItem = microCBORDecode(utf8StringCbor);
+	DataItem *byteStringItem = microCBORDecode(byteStringCbor);
+	DataItem *arrayItem = microCBORDecode(arrayCbor);
+	DataItem *mapItem = microCBORDecode(mapCbor);
+	DataItem *tagItem = microCBORDecode(tagCbor);
+	DataItem *specialItem = microCBORDecode(specialCbor);
 
-	DataItem *unsignedIntegerCopyItem = decode(unsignedIntegerCbor);
-	DataItem *negativeIntegerCopyItem = decode(negativeIntegerCbor);
-	DataItem *utf8StringCopyItem = decode(utf8StringCbor);
-	DataItem *byteStringCopyItem = decode(byteStringCbor);
-	DataItem *arrayCopyItem = decode(arrayCbor);
-	DataItem *mapCopyItem = decode(mapCbor);
-	DataItem *tagCopyItem = decode(tagCbor);
-	DataItem *specialCopyItem = decode(specialCbor);
+	DataItem *unsignedIntegerCopyItem = microCBORDecode(unsignedIntegerCbor);
+	DataItem *negativeIntegerCopyItem = microCBORDecode(negativeIntegerCbor);
+	DataItem *utf8StringCopyItem = microCBORDecode(utf8StringCbor);
+	DataItem *byteStringCopyItem = microCBORDecode(byteStringCbor);
+	DataItem *arrayCopyItem = microCBORDecode(arrayCbor);
+	DataItem *mapCopyItem = microCBORDecode(mapCbor);
+	DataItem *tagCopyItem = microCBORDecode(tagCbor);
+	DataItem *specialCopyItem = microCBORDecode(specialCbor);
 
     EXPECT_TRUE(dataItemEqual(unsignedIntegerItem, unsignedIntegerCopyItem));
     EXPECT_TRUE(dataItemEqual(negativeIntegerItem, negativeIntegerCopyItem));
@@ -46,14 +46,14 @@ TEST(dataItemEqualTest, dataItemEqualTest) {
 }
 
 TEST(dataItemEqualTest, dataItemNotEqualTest) {
-	DataItem *unsignedIntegerItem = decode(unsignedIntegerCbor);
-	DataItem *negativeIntegerItem = decode(negativeIntegerCbor);
-	DataItem *utf8StringItem = decode(utf8StringCbor);
-	DataItem *byteStringItem = decode(byteStringCbor);
-	DataItem *arrayItem = decode(arrayCbor);
-	DataItem *mapItem = decode(mapCbor);
-	DataItem *tagItem = decode(tagCbor);
-	DataItem *specialItem = decode(specialCbor);
+	DataItem *unsignedIntegerItem = microCBORDecode(unsignedIntegerCbor);
+	DataItem *negativeIntegerItem = microCBORDecode(negativeIntegerCbor);
+	DataItem *utf8StringItem = microCBORDecode(utf8StringCbor);
+	DataItem *byteStringItem = microCBORDecode(byteStringCbor);
+	DataItem *arrayItem = microCBORDecode(arrayCbor);
+	DataItem *mapItem = microCBORDecode(mapCbor);
+	DataItem *tagItem = microCBORDecode(tagCbor);
+	DataItem *specialItem = microCBORDecode(specialCbor);
 
     EXPECT_FALSE(dataItemEqual(unsignedIntegerItem, negativeIntegerItem));
     EXPECT_FALSE(dataItemEqual(unsignedIntegerItem, utf8StringItem));

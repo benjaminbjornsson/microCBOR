@@ -22,16 +22,16 @@ uint8_t finalSevenToZeroCbor[]	= { 0x88, 0xF4, 0xC0, 0x00, 0x63, 0x61, 0x62, 0x6
 uint8_t finalRandomCbor[]		= { 0x88, 0x42, 0x78, 0x79, 0x14, 0xC0, 0x00, 0x43, 0x61, 0x62, 0x63, 0x63, 0x61, 0x62, 0x63, 0x2B, 0x62, 0x78, 0x79, 0xF4 }; // [h'7879', 20, 0(0), h'616263', "abc", -12, "xy", false]
 
 TEST(dataItemInsertItemAtIndexTest, dataItemInsertItemAtIndexZeroToSeven) {
-	DataItem *unsignedIntegerItem = decode(unsignedIntegerCbor);
-	DataItem *negativeIntegerItem = decode(negativeIntegerCbor);
-	DataItem *utf8String1Item = decode(utf8String1Cbor);
-	DataItem *utf8String2Item = decode(utf8String2Cbor);
-	DataItem *byteString1Item = decode(byteString1Cbor);
-	DataItem *byteString2Item = decode(byteString2Cbor);
-	DataItem *tagItem = decode(tagCbor);
-	DataItem *specialItem = decode(specialCbor);
+	DataItem *unsignedIntegerItem = microCBORDecode(unsignedIntegerCbor);
+	DataItem *negativeIntegerItem = microCBORDecode(negativeIntegerCbor);
+	DataItem *utf8String1Item = microCBORDecode(utf8String1Cbor);
+	DataItem *utf8String2Item = microCBORDecode(utf8String2Cbor);
+	DataItem *byteString1Item = microCBORDecode(byteString1Cbor);
+	DataItem *byteString2Item = microCBORDecode(byteString2Cbor);
+	DataItem *tagItem = microCBORDecode(tagCbor);
+	DataItem *specialItem = microCBORDecode(specialCbor);
 
-	DataItem *arrayItem = decode(arrayCbor);
+	DataItem *arrayItem = microCBORDecode(arrayCbor);
 	dataItemArrayInsertElementAtIndex(arrayItem, unsignedIntegerItem, 0);
 	dataItemArrayInsertElementAtIndex(arrayItem, negativeIntegerItem, 1);
 	dataItemArrayInsertElementAtIndex(arrayItem, utf8String1Item, 2);
@@ -41,23 +41,23 @@ TEST(dataItemInsertItemAtIndexTest, dataItemInsertItemAtIndexZeroToSeven) {
 	dataItemArrayInsertElementAtIndex(arrayItem, tagItem, 6);
 	dataItemArrayInsertElementAtIndex(arrayItem, specialItem, 7);
 
-	uint8_t *final = encode(arrayItem);
+	uint8_t *final = microCBOREncode(arrayItem);
 	for(uint64_t i = 0; i < sizeof(finalZeroToSevenCbor); i++) {
 		EXPECT_EQ(final[i], finalZeroToSevenCbor[i]);
 	}
 }
 
 TEST(dataItemInsertItemAtIndexTest, dataItemInsertItemAtIndexSevenToZero) {
-	DataItem *unsignedIntegerItem = decode(unsignedIntegerCbor);
-	DataItem *negativeIntegerItem = decode(negativeIntegerCbor);
-	DataItem *utf8String1Item = decode(utf8String1Cbor);
-	DataItem *utf8String2Item = decode(utf8String2Cbor);
-	DataItem *byteString1Item = decode(byteString1Cbor);
-	DataItem *byteString2Item = decode(byteString2Cbor);
-	DataItem *tagItem = decode(tagCbor);
-	DataItem *specialItem = decode(specialCbor);
+	DataItem *unsignedIntegerItem = microCBORDecode(unsignedIntegerCbor);
+	DataItem *negativeIntegerItem = microCBORDecode(negativeIntegerCbor);
+	DataItem *utf8String1Item = microCBORDecode(utf8String1Cbor);
+	DataItem *utf8String2Item = microCBORDecode(utf8String2Cbor);
+	DataItem *byteString1Item = microCBORDecode(byteString1Cbor);
+	DataItem *byteString2Item = microCBORDecode(byteString2Cbor);
+	DataItem *tagItem = microCBORDecode(tagCbor);
+	DataItem *specialItem = microCBORDecode(specialCbor);
 
-	DataItem *arrayItem = decode(arrayCbor);
+	DataItem *arrayItem = microCBORDecode(arrayCbor);
 	dataItemArrayInsertElementAtIndex(arrayItem, unsignedIntegerItem, 0);
 	dataItemArrayInsertElementAtIndex(arrayItem, negativeIntegerItem, 0);
 	dataItemArrayInsertElementAtIndex(arrayItem, utf8String1Item, 0);
@@ -67,23 +67,23 @@ TEST(dataItemInsertItemAtIndexTest, dataItemInsertItemAtIndexSevenToZero) {
 	dataItemArrayInsertElementAtIndex(arrayItem, tagItem, 0);
 	dataItemArrayInsertElementAtIndex(arrayItem, specialItem, 0);
 
-	uint8_t *final = encode(arrayItem);
+	uint8_t *final = microCBOREncode(arrayItem);
 	for(uint64_t i = 0; i < sizeof(finalSevenToZeroCbor); i++) {
 		EXPECT_EQ(final[i], finalSevenToZeroCbor[i]);
 	}
 }
 
 TEST(dataItemInsertItemAtIndexTest, dataItemInsertItemAtIndexRandom) {
-	DataItem *unsignedIntegerItem = decode(unsignedIntegerCbor);
-	DataItem *negativeIntegerItem = decode(negativeIntegerCbor);
-	DataItem *utf8String1Item = decode(utf8String1Cbor);
-	DataItem *utf8String2Item = decode(utf8String2Cbor);
-	DataItem *byteString1Item = decode(byteString1Cbor);
-	DataItem *byteString2Item = decode(byteString2Cbor);
-	DataItem *tagItem = decode(tagCbor);
-	DataItem *specialItem = decode(specialCbor);
+	DataItem *unsignedIntegerItem = microCBORDecode(unsignedIntegerCbor);
+	DataItem *negativeIntegerItem = microCBORDecode(negativeIntegerCbor);
+	DataItem *utf8String1Item = microCBORDecode(utf8String1Cbor);
+	DataItem *utf8String2Item = microCBORDecode(utf8String2Cbor);
+	DataItem *byteString1Item = microCBORDecode(byteString1Cbor);
+	DataItem *byteString2Item = microCBORDecode(byteString2Cbor);
+	DataItem *tagItem = microCBORDecode(tagCbor);
+	DataItem *specialItem = microCBORDecode(specialCbor);
 
-	DataItem *arrayItem = decode(arrayCbor);
+	DataItem *arrayItem = microCBORDecode(arrayCbor);
 	dataItemArrayInsertElementAtIndex(arrayItem, unsignedIntegerItem, 0);
 	dataItemArrayInsertElementAtIndex(arrayItem, negativeIntegerItem, 1);
 	dataItemArrayInsertElementAtIndex(arrayItem, utf8String1Item, 0);
@@ -93,7 +93,7 @@ TEST(dataItemInsertItemAtIndexTest, dataItemInsertItemAtIndexRandom) {
 	dataItemArrayInsertElementAtIndex(arrayItem, tagItem, 2);
 	dataItemArrayInsertElementAtIndex(arrayItem, specialItem, 7);
 
-	uint8_t *final = encode(arrayItem);
+	uint8_t *final = microCBOREncode(arrayItem);
 	for(uint64_t i = 0; i < sizeof(finalRandomCbor); i++) {
 		EXPECT_EQ(final[i], finalRandomCbor[i]);
 }

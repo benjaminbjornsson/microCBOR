@@ -17,14 +17,14 @@ uint8_t tagCbor[] = { 0xC0, 0x00 };	// 0(0)
 uint8_t specialCbor[] = { 0xF4 };	// false
 
 TEST(dataItemFreeTest, dataItemFree) {
-	DataItem *unsignedIntegerItem = decode(unsignedIntegerCbor);
-	DataItem *negativeIntegerItem = decode(negativeIntegerCbor);
-	DataItem *utf8StringItem = decode(utf8StringCbor);
-	DataItem *byteStringItem = decode(byteStringCbor);
-	DataItem *arrayItem = decode(arrayCbor);
-	DataItem *mapItem = decode(mapCbor);
-	DataItem *tagItem = decode(tagCbor);
-	DataItem *specialItem = decode(specialCbor);
+	DataItem *unsignedIntegerItem = microCBORDecode(unsignedIntegerCbor);
+	DataItem *negativeIntegerItem = microCBORDecode(negativeIntegerCbor);
+	DataItem *utf8StringItem = microCBORDecode(utf8StringCbor);
+	DataItem *byteStringItem = microCBORDecode(byteStringCbor);
+	DataItem *arrayItem = microCBORDecode(arrayCbor);
+	DataItem *mapItem = microCBORDecode(mapCbor);
+	DataItem *tagItem = microCBORDecode(tagCbor);
+	DataItem *specialItem = microCBORDecode(specialCbor);
 
     dataItemFree(unsignedIntegerItem);
     dataItemFree(negativeIntegerItem);

@@ -23,7 +23,7 @@
 
 #include "decoder.h"
 
-DataItem *decode(uint8_t *byteArray) {
+DataItem *microCBORDecode(uint8_t *byteArray) {
 	DataItem *dataItem = (DataItem *)malloc(sizeof(DataItem));
 	dataItem->header = *byteArray++;
 	dataItem->extendedCount = 0x00;
@@ -53,7 +53,7 @@ DataItem *decode(uint8_t *byteArray) {
 		{
 			dataItem->array = (DataItem **)malloc(sizeof(DataItem *) * count);
 			for(uint64_t i = 0; i < count; i++) {
-				dataItem->array[i] = decode(byteArray);
+				dataItem->array[i] = microCBORDecode(byteArray);
 				byteArray += dataItemByteCount(dataItem->array[i]);
 			}
 			break;
@@ -64,10 +64,10 @@ DataItem *decode(uint8_t *byteArray) {
 			dataItem->keys = (DataItem **)malloc(sizeof(DataItem *) * count);
 			dataItem->values = (DataItem **)malloc(sizeof(DataItem *) * count);
 			for(uint64_t i = 0; i < count; i++) {
-				dataItem->keys[i] = decode(byteArray);
+				dataItem->keys[i] = microCBORDecode(byteArray);
 				byteArray += dataItemByteCount(dataItem->keys[i]);
 
-				dataItem->values[i] = decode(byteArray);
+				dataItem->values[i] = microCBORDecode(byteArray);
 				byteArray += dataItemByteCount(dataItem->values[i]);
 			}
 			break;
@@ -75,7 +75,7 @@ DataItem *decode(uint8_t *byteArray) {
 
 		case TAG:
 		{
-			dataItem->content = decode(byteArray);
+			dataItem->content = microCBORDecode(byteArray);
 			byteArray += dataItemByteCount(dataItem->content);
 			break;
 		}

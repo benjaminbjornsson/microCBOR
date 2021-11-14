@@ -28,29 +28,29 @@ uint8_t valueCbor[] = { 0x62, 0x78, 0x79 };
 uint8_t zeroMapCbor[] = { 0xA0 };
 
 TEST(dataItemMapChangeValueAtKeyTest, dataItemMapChangeValueAtKeyTest) {
-	DataItem *mapItem = decode(mapCbor);
+	DataItem *mapItem = microCBORDecode(mapCbor);
 
-	DataItem *key1Item = decode(key1Cbor);
-	DataItem *key2Item = decode(key2Cbor);
-	DataItem *key3Item = decode(key3Cbor);
-	DataItem *key4Item = decode(key4Cbor);
+	DataItem *key1Item = microCBORDecode(key1Cbor);
+	DataItem *key2Item = microCBORDecode(key2Cbor);
+	DataItem *key3Item = microCBORDecode(key3Cbor);
+	DataItem *key4Item = microCBORDecode(key4Cbor);
 
-	DataItem *valueItem = decode(valueCbor);
+	DataItem *valueItem = microCBORDecode(valueCbor);
 	
 	dataItemMapChangeValueAtKey(mapItem, key1Item, valueItem);
-	uint8_t *final = encode(mapItem);
+	uint8_t *final = microCBOREncode(mapItem);
 	EXPECT_TRUE(compareByteArray(final, finalMap1Cbor, dataItemCount(mapItem)));
 
 	dataItemMapChangeValueAtKey(mapItem, key2Item, valueItem);
-	final = encode(mapItem);
+	final = microCBOREncode(mapItem);
 	EXPECT_TRUE(compareByteArray(final, finalMap2Cbor, dataItemCount(mapItem)));
 
 	dataItemMapChangeValueAtKey(mapItem, key3Item, valueItem);
-	final = encode(mapItem);
+	final = microCBOREncode(mapItem);
 	EXPECT_TRUE(compareByteArray(final, finalMap3Cbor, dataItemCount(mapItem)));
 
 	dataItemMapChangeValueAtKey(mapItem, key4Item, valueItem);
-	final = encode(mapItem);
+	final = microCBOREncode(mapItem);
 	EXPECT_TRUE(compareByteArray(final, finalMap4Cbor, dataItemCount(mapItem)));
 }
 

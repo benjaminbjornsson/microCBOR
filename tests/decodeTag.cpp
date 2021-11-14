@@ -8,7 +8,7 @@ uint8_t tag1Cbor[] = { 0xC0, 0x63, 0x61, 0x62, 0x63 };  // 0("abc")
 uint8_t tag1ContentCbor[] = { 0x63, 0x61, 0x62, 0x63 }; // "abc"
 
 TEST(tagTest, tagTest) {
-    DataItem *tag1Item = decode(tag1Cbor);
+    DataItem *tag1Item = microCBORDecode(tag1Cbor);
     DataItem *tag1ContentItem = tag1Item->content;
 
     EXPECT_EQ(tag1Item->header, 0xC0);

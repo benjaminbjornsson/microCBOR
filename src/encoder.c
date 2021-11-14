@@ -20,10 +20,15 @@
 #include <assert.h>
 #include "encoder.h"
 
-uint8_t *encode(DataItem *dataItem) {
+uint8_t *microCBOREncode(DataItem *dataItem) {
 	assert(dataItem != NULL);
 	
 	uint8_t *cbor = (uint8_t *)malloc(sizeof(uint8_t) * dataItemByteCount(dataItem));
+	if(cbor == NULL) {
+		printf("Unexpected Error: Out of memory\n");
+		return NULL;
+	}
+
 	uint8_t *cborPtr = cbor;
 
 	*cborPtr++ = dataItem->header;
@@ -55,7 +60,11 @@ uint8_t *encode(DataItem *dataItem) {
 		case ARRAY:
 		{	
 			for(uint64_t i = 0; i < count; i++) {
-				uint8_t *item = encode(dataItem->array[i]);
+				uint8_t *item = microCBOREncode(dataItem->array[i]);
+				if(item == NULL) {
+					break;
+				}
+
 				uint8_t *itemPtr = item;
 				for(uint64_t j = 0; j < dataItemByteCount(dataItem->array[i]); j++) {
 					*cborPtr++ = *itemPtr++;
@@ -68,14 +77,15 @@ uint8_t *encode(DataItem *dataItem) {
 		case MAP:
 		{
 			for(uint64_t i = 0; i < count; i++) {
-				uint8_t *key = encode(dataItem->keys[i]);
+				uint8_t *key = microCBOREncode(dataItem->keys[i]);
+
 				uint8_t *keyPtr = key;
 				for(uint64_t j = 0; j < dataItemByteCount(dataItem->keys[i]); j++) {
 					*cborPtr++ = *keyPtr++;
 				}
 				free(key);
 
-				uint8_t *value = encode(dataItem->values[i]);
+				uint8_t *value = microCBOREncode(dataItem->values[i]);
 				uint8_t *valuePtr = value;
 				for(uint64_t j = 0; j < dataItemByteCount(dataItem->values[i]); j++) {
 					*cborPtr++ = *valuePtr++;
@@ -87,7 +97,7 @@ uint8_t *encode(DataItem *dataItem) {
 
 		case TAG:
 		{
-			uint8_t *content = encode(dataItem->content);
+			uint8_t *content = microCBOREncode(dataItem->content);
 			uint8_t *contentPtr = content;
 			for(uint64_t i = 0; i < dataItemByteCount(dataItem->content); i++) {
 				*cborPtr++ = *contentPtr++;

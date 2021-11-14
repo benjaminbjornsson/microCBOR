@@ -32,102 +32,102 @@ uint8_t key4Cbor[] = { 0xC0, 0x00 };
 uint8_t zeroMapCbor[] = { 0xA0 };
 
 TEST(dataItemMapRemoveKeyTest, dataItemMapRemoveKeyFourToZero) {
-	DataItem *mapItem = decode(mapCbor);
+	DataItem *mapItem = microCBORDecode(mapCbor);
 	DataItem *keyItem;
 	uint8_t *final;
 	
-	keyItem = decode(key4Cbor);
+	keyItem = microCBORDecode(key4Cbor);
 	dataItemMapRemoveKey(mapItem, keyItem);
-	final = encode(mapItem);
+	final = microCBOREncode(mapItem);
 	EXPECT_TRUE(compareByteArray(final, finalFourToZero1Cbor, sizeof(finalFourToZero1Cbor)));
 	EXPECT_EQ(dataItemByteCount(mapItem), sizeof(finalFourToZero1Cbor));
 	free(keyItem);
 
-	keyItem = decode(key3Cbor);
+	keyItem = microCBORDecode(key3Cbor);
 	dataItemMapRemoveKey(mapItem, keyItem);
-	final = encode(mapItem);
+	final = microCBOREncode(mapItem);
 	EXPECT_TRUE(compareByteArray(final, finalFourToZero2Cbor, sizeof(finalFourToZero2Cbor)));
 	EXPECT_EQ(dataItemByteCount(mapItem), sizeof(finalFourToZero2Cbor));
 	free(keyItem);
 
-	keyItem = decode(key2Cbor);
+	keyItem = microCBORDecode(key2Cbor);
 	dataItemMapRemoveKey(mapItem, keyItem);
-	final = encode(mapItem);
+	final = microCBOREncode(mapItem);
 	EXPECT_TRUE(compareByteArray(final, finalFourToZero3Cbor, sizeof(finalFourToZero3Cbor)));
 	EXPECT_EQ(dataItemByteCount(mapItem), sizeof(finalFourToZero3Cbor));
 	free(keyItem);
 
-	keyItem = decode(key1Cbor);
+	keyItem = microCBORDecode(key1Cbor);
 	dataItemMapRemoveKey(mapItem, keyItem);
-	final = encode(mapItem);
+	final = microCBOREncode(mapItem);
 	EXPECT_TRUE(compareByteArray(final, zeroMapCbor, sizeof(zeroMapCbor)));
 	EXPECT_EQ(dataItemByteCount(mapItem), sizeof(zeroMapCbor));
 	free(keyItem);
 }
 
 TEST(dataItemMapRemoveKeyTest, dataItemMapRemoveKeyZero) {
-	DataItem *mapItem = decode(mapCbor);
+	DataItem *mapItem = microCBORDecode(mapCbor);
 	DataItem *keyItem;
 	uint8_t *final;
 
-	keyItem = decode(key1Cbor);
+	keyItem = microCBORDecode(key1Cbor);
 	dataItemMapRemoveKey(mapItem, keyItem);
-	final = encode(mapItem);
+	final = microCBOREncode(mapItem);
 	EXPECT_TRUE(compareByteArray(final, finalZero1Cbor, sizeof(finalZero1Cbor)));
 	EXPECT_EQ(dataItemByteCount(mapItem), sizeof(finalZero1Cbor));
 	free(keyItem);
 
-	keyItem = decode(key2Cbor);
+	keyItem = microCBORDecode(key2Cbor);
 	dataItemMapRemoveKey(mapItem, keyItem);
-	final = encode(mapItem);
+	final = microCBOREncode(mapItem);
 	EXPECT_TRUE(compareByteArray(final, finalZero2Cbor, sizeof(finalZero2Cbor)));
 	EXPECT_EQ(dataItemByteCount(mapItem), sizeof(finalZero2Cbor));
 	free(keyItem);
 
-	keyItem = decode(key3Cbor);
+	keyItem = microCBORDecode(key3Cbor);
 	dataItemMapRemoveKey(mapItem, keyItem);
-	final = encode(mapItem);
+	final = microCBOREncode(mapItem);
 	EXPECT_TRUE(compareByteArray(final, finalZero3Cbor, sizeof(finalZero3Cbor)));
 	EXPECT_EQ(dataItemByteCount(mapItem), sizeof(finalZero3Cbor));
 	free(keyItem);
 
-	keyItem = decode(key4Cbor);
+	keyItem = microCBORDecode(key4Cbor);
 	dataItemMapRemoveKey(mapItem, keyItem);
-	final = encode(mapItem);
+	final = microCBOREncode(mapItem);
 	EXPECT_TRUE(compareByteArray(final, zeroMapCbor, sizeof(zeroMapCbor)));
 	EXPECT_EQ(dataItemByteCount(mapItem), sizeof(zeroMapCbor));
 	free(keyItem);
 }
 
 TEST(dataItemMapRemoveKeyTest, dataItemMapRemoveKeyRandom) {
-	DataItem *mapItem = decode(mapCbor);
+	DataItem *mapItem = microCBORDecode(mapCbor);
 	DataItem *keyItem;
 	uint8_t *final;
 
-	keyItem = decode(key2Cbor);
+	keyItem = microCBORDecode(key2Cbor);
 	dataItemMapRemoveKey(mapItem, keyItem);
-	final = encode(mapItem);
+	final = microCBOREncode(mapItem);
 	dbg_buff_print(final, dataItemByteCount(mapItem));
 	EXPECT_TRUE(compareByteArray(final, finalRandom1Cbor, sizeof(finalRandom1Cbor)));
 	EXPECT_EQ(dataItemByteCount(mapItem), sizeof(finalRandom1Cbor));
 
-	keyItem = decode(key3Cbor);
+	keyItem = microCBORDecode(key3Cbor);
 	dataItemMapRemoveKey(mapItem, keyItem);
-	final = encode(mapItem);
+	final = microCBOREncode(mapItem);
 	dbg_buff_print(final, dataItemByteCount(mapItem));
 	EXPECT_TRUE(compareByteArray(final, finalRandom2Cbor, sizeof(finalRandom2Cbor)));
 	EXPECT_EQ(dataItemByteCount(mapItem), sizeof(finalRandom2Cbor));
 
-	keyItem = decode(key4Cbor);
+	keyItem = microCBORDecode(key4Cbor);
 	dataItemMapRemoveKey(mapItem, keyItem);
-	final = encode(mapItem);
+	final = microCBOREncode(mapItem);
 	dbg_buff_print(final, dataItemByteCount(mapItem));
 	EXPECT_TRUE(compareByteArray(final, finalRandom3Cbor, sizeof(finalRandom3Cbor)));
 	EXPECT_EQ(dataItemByteCount(mapItem), sizeof(finalRandom3Cbor));
 	
-	keyItem = decode(key1Cbor);
+	keyItem = microCBORDecode(key1Cbor);
 	dataItemMapRemoveKey(mapItem, keyItem);
-	final = encode(mapItem);
+	final = microCBOREncode(mapItem);
 	dbg_buff_print(final, dataItemByteCount(mapItem));
 	EXPECT_TRUE(compareByteArray(final, zeroMapCbor, sizeof(zeroMapCbor)));
 	EXPECT_EQ(dataItemByteCount(mapItem), sizeof(zeroMapCbor));
