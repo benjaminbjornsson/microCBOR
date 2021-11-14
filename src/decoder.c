@@ -18,10 +18,10 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include <math.h>
 #include <string.h>
 
 #include "decoder.h"
+#include "exp2_uint.h"
 
 DataItem *microCBORDecode(uint8_t *byteArray) {
 	DataItem *dataItem = (DataItem *)malloc(sizeof(DataItem));
@@ -30,7 +30,7 @@ DataItem *microCBORDecode(uint8_t *byteArray) {
 
 	uint8_t shortCount = dataItemShortCount(dataItem);
 	if(24 <= shortCount && shortCount <= 27) {
-		for(uint64_t i = 0; i < exp2(shortCount - 24); i++) {
+		for(uint64_t i = 0; i < exp2_uint(shortCount - 24); i++) {
 			dataItem->extendedCount = dataItem->extendedCount << 8 | *byteArray++;
 		}
 	}

@@ -16,9 +16,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <assert.h>
 #include "encoder.h"
+#include "exp2_uint.h"
 
 uint8_t *microCBOREncode(DataItem *dataItem) {
 	assert(dataItem != NULL);
@@ -35,7 +35,7 @@ uint8_t *microCBOREncode(DataItem *dataItem) {
 
 	uint8_t shortCount = dataItemShortCount(dataItem);
 	if(24 <= shortCount && shortCount <= 27) {
-		uint8_t extendedBytes = exp2(shortCount - 24);
+		uint8_t extendedBytes = exp2_uint(shortCount - 24);
 		for(uint64_t i = 0; i < extendedBytes; i++) {
 			uint64_t shiftCount = ((extendedBytes - 1 - i) * 8);
 			uint64_t mask = (uint64_t)0xFF << shiftCount;
