@@ -21,7 +21,7 @@
 #include "decoder.h"
 #include "encoder.h"
 
-#define	INVALID_INDEX	-1
+#define	INVALID_INDEX	(0xFFFFFFFFFFFFFFFF)
 
 /*
 	#######################################
@@ -42,16 +42,21 @@ uint64_t dataItemIndexOfItem(DataItem **array, DataItem *item, uint64_t count) {
 	return INVALID_INDEX;
 }
 
-DataItem **dataItemInsertAtIndex(DataItem **dataItem, DataItem *element, uint64_t index, uint64_t length) {
+DataItem **dataItemInsertAtIndex(DataItem **dataItem, DataItem *element, uint64_t index, uint64_t length, uint8_t *err) {
 	assert(dataItem != NULL);
 	assert(element != NULL);
 	assert(index <= length);
 
+	DataItem *elementCopy = dataItemCopy(element);
+	if(elementCopy == NULL) {
+		*err = 1;
+		return dataItem;
+	}
+
 	DataItem **newArray = (DataItem **)malloc(sizeof(DataItem *) * (length + 1));
 
-	newArray[index] = element;
+	newArray[index] = elementCopy;
 	for(uint64_t i = 0; i < length; i++) {
-		assert(dataItem[i] != NULL);
 		newArray[i >= index ? i + 1 : i] = dataItem[i];
 	}
 
@@ -60,17 +65,18 @@ DataItem **dataItemInsertAtIndex(DataItem **dataItem, DataItem *element, uint64_
 	return newArray;
 }
 
-DataItem **dataItemRemoveAtIndex(DataItem **dataItem, uint64_t index, uint64_t length) {
+DataItem **dataItemRemoveAtIndex(DataItem **dataItem, uint64_t index, uint64_t length, uint8_t *err) {
 	assert(dataItem != NULL);
 	assert(index < length);
 
 	DataItem **newArray = (DataItem **)malloc(sizeof(DataItem *) * (length - 1));
-	if(newArray == NULL)
-		return NULL;
+	if(newArray == NULL) {
+		*err = 1;
+		return dataItem;
+	}
 	
-	DataItem *element;
+	DataItem *element = NULL;
 	for(uint64_t i = 0; i < length; i++) {
-		assert(dataItem[i] != NULL);
 		if(i == index) {
 			element = dataItem[i];
 		} else {
@@ -84,7 +90,7 @@ DataItem **dataItemRemoveAtIndex(DataItem **dataItem, uint64_t index, uint64_t l
 	return newArray;
 }
 
-void dataItemSetCount(DataItem *dataItem, uint64_t count) {
+uint64_t dataItemSetCount(DataItem *dataItem, uint64_t count) {
 	assert(dataItem != NULL);
 
 	uint8_t shortCount;
@@ -106,6 +112,8 @@ void dataItemSetCount(DataItem *dataItem, uint64_t count) {
 	}
 
 	dataItem->header = (dataItem->header & 0xE0) | (shortCount & 0x1F);
+
+	return count;
 }
 
 /*
@@ -330,32 +338,41 @@ void dataItemFree(DataItem *dataItem) {
 	#######################################
 */
 
-void dataItemArrayInsertElementAtIndex(DataItem *array, DataItem *element, uint64_t index) {
+uint64_t dataItemArrayInsertElementAtIndex(DataItem *array, DataItem *element, uint64_t index) {
 	assert(array != NULL);
 	assert(element != NULL);
 
 	uint64_t count = dataItemCount(array);
+	
+	uint8_t err = 0;
+	array->array = dataItemInsertAtIndex(array->array, element, index, count, &err);
 
-	array->array = dataItemInsertAtIndex(array->array, element, index, count);
+	if(err != 0) {
+		return INVALID_INDEX;
+	}
 
-	dataItemSetCount(array, count + 1);
+	return dataItemSetCount(array, count + 1);
 }
 
-void dataItemArrayRemoveElementAtIndex(DataItem *array, uint64_t index) {
+uint64_t dataItemArrayRemoveElementAtIndex(DataItem *array, uint64_t index) {
 	assert(array != NULL);
 
 	uint64_t count = dataItemCount(array);
 
-	array->array = dataItemRemoveAtIndex(array->array, index, count);
+	uint8_t err;
+	array->array = dataItemRemoveAtIndex(array->array, index, count, &err);
 
-	dataItemSetCount(array, count - 1);
+	if(err != 0)
+		return INVALID_INDEX;
+	
+	return dataItemSetCount(array, count - 1);
 }
 
-void dataItemArrayAppendElement(DataItem *array, DataItem *element) {
+uint64_t dataItemArrayAppendElement(DataItem *array, DataItem *element) {
 	assert(array != NULL);
 	assert(element != NULL);
 
-	dataItemArrayInsertElementAtIndex(array, element, dataItemCount(array));
+	return dataItemArrayInsertElementAtIndex(array, element, dataItemCount(array));
 }
 
 /*
@@ -364,19 +381,27 @@ void dataItemArrayAppendElement(DataItem *array, DataItem *element) {
 	#######################################
 */
 
-void dataItemMapRemoveKey(DataItem *map, DataItem *key) {
+uint64_t dataItemMapRemoveKey(DataItem *map, DataItem *key) {
 	assert(map != NULL);
 	assert(key != NULL);
 
 	uint64_t count = dataItemCount(map);
 	uint64_t index = dataItemIndexOfItem(map->keys, key, count);
 	if(index == INVALID_INDEX)
-		return;
+		return INVALID_INDEX;
 
-	map->keys = dataItemRemoveAtIndex(map->keys, index, count);
-	map->values = dataItemRemoveAtIndex(map->values, index, count);
+	uint8_t err = 0;
+	map->keys = dataItemRemoveAtIndex(map->keys, index, count, &err);
+	if(err != 0) {
+		return INVALID_INDEX;
+	}
 
-	dataItemSetCount(map, count - 1);
+	map->values = dataItemRemoveAtIndex(map->values, index, count, &err);
+	if(err != 0) {
+		return INVALID_INDEX;
+	}
+
+	return dataItemSetCount(map, count - 1);
 }
 
 uint64_t dataItemMapIndexOfKey(DataItem *map, DataItem *key) {
@@ -386,7 +411,7 @@ uint64_t dataItemMapIndexOfKey(DataItem *map, DataItem *key) {
 	return dataItemIndexOfItem(map->keys, key, dataItemCount(map));
 }
 
-void dataItemMapInsertKeyValue(DataItem *map, DataItem *key, DataItem *value) {
+uint64_t dataItemMapInsertKeyValue(DataItem *map, DataItem *key, DataItem *value) {
 	assert(map != NULL);
 	assert(key != NULL);
 	assert(value != NULL);
@@ -400,24 +425,36 @@ void dataItemMapInsertKeyValue(DataItem *map, DataItem *key, DataItem *value) {
 		index++;
 	}
 
-	map->keys = dataItemInsertAtIndex(map->keys, key, index, count);
-	map->values = dataItemInsertAtIndex(map->values, value, index, count);
+	uint8_t err = 0;
+	map->keys = dataItemInsertAtIndex(map->keys, key, index, count, &err);
+	if(err != 0) {
+		return INVALID_INDEX;
+	}
+
+	map->values = dataItemInsertAtIndex(map->values, value, index, count, &err);
+	if(err != 0) {
+		return INVALID_INDEX;
+	}
 	
-	dataItemSetCount(map, count + 1);
+	return dataItemSetCount(map, count + 1);
 }
 
-void dataItemMapChangeValueAtKey(DataItem *map, DataItem *key, DataItem *value) {
+uint8_t dataItemMapChangeValueAtKey(DataItem *map, DataItem *key, DataItem *value) {
 	assert(map != NULL);
 	assert(key != NULL);
 	assert(value != NULL);
+
+	DataItem *valueCopy = dataItemCopy(value);
+	if(valueCopy == NULL)
+		return -1;
 	
 	for(uint64_t i = 0; i < dataItemCount(map); i++) {
 		if(dataItemEqual(key, map->keys[i])) {
 			dataItemFree(map->values[i]);
-			map->values[i] = value;
-			return;
+			map->values[i] = valueCopy;
+			return 0;
 		}
 	}
 
-	dataItemFree(value);
+	return -1;
 }

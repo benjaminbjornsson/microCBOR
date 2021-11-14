@@ -56,7 +56,7 @@ uint8_t dataItemShortCount(DataItem *dataItem);
 
 uint64_t dataItemCount(DataItem *dataItem);
 
-void dataItemSetCount(DataItem *dataItem, uint64_t count);
+uint64_t dataItemSetCount(DataItem *dataItem, uint64_t count);
 
 uint64_t dataItemByteCount(DataItem *dataItem);
 
@@ -74,11 +74,11 @@ void dataItemFree(DataItem *dataItem);
 	#######################################
 */
 
-void dataItemArrayInsertElementAtIndex(DataItem *array, DataItem *element, uint64_t index);
+uint64_t dataItemArrayInsertElementAtIndex(DataItem *array, DataItem *element, uint64_t index);
 
-void dataItemArrayRemoveElementAtIndex(DataItem *array, uint64_t index);
+uint64_t dataItemArrayRemoveElementAtIndex(DataItem *array, uint64_t index);
 
-void dataItemArrayAppendElement(DataItem *array, DataItem *element);
+uint64_t dataItemArrayAppendElement(DataItem *array, DataItem *element);
 
 /*
 	#######################################
@@ -86,13 +86,12 @@ void dataItemArrayAppendElement(DataItem *array, DataItem *element);
 	#######################################
 */
 
-void dataItemMapChangeValueAtKey(DataItem *map, DataItem *key, DataItem *value);
+uint64_t dataItemMapRemoveKey(DataItem *map, DataItem *key);
 
 uint64_t dataItemMapIndexOfKey(DataItem *map, DataItem *key);
 
-void dataItemMapInsertKeyValue(DataItem *map, DataItem *key, DataItem *value);
+uint64_t dataItemMapInsertKeyValue(DataItem *map, DataItem *key, DataItem *value);
 
-void dataItemMapRemoveKey(DataItem *map, DataItem *key);
-
+uint8_t dataItemMapChangeValueAtKey(DataItem *map, DataItem *key, DataItem *value);
 
 #endif /* _DATA_ITEM_H_ */
